@@ -82,3 +82,21 @@ docs/dev
 
 # CMake generated files
 *.gen.cmake
+*.cmake
+*/*.cmake
+CMakeFiles
+examples/CMakeFiles
+src/caffe/CMakeFiles
+src/caffe/test/CMakeFiles
+tools/CMakeFiles
+src/gtest/CMakeFiles
+src/gtest/CMakeFiles
+*/CMakeFiles
+#// **/CMakeFiles
+#// **CMakeFilessrc/gtest/CMakeFiles/
+src/caffe/proto/CMakeFiles/
+examples/cmake_install.cmake
+examples/cmake_install.cmake
+cmake_install.cmake CMakeCache.txt examples/Makefile
+cmake_install.cmake CMakeCache.txt examples/Makefile
+cmake_install.cmake CMakeCache.txt examples/Makefile
