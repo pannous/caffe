@@ -38,9 +38,12 @@ static void CheckFile(const string& filename) {
 }
 
 bp::object PyBlobWrap::get_data() {
-  npy_intp dims[] = {num(), channels(), height(), width()};
-
-  PyObject *obj = PyArray_SimpleNewFromData(4, dims, NPY_FLOAT32,
+  const int num_axes = blob_->num_axes();
+  vector<npy_intp> dims(num_axes);
+  for (int i = 0; i < num_axes; ++i) {
+    dims[i] = blob_->shape(i);
+  }
+  PyObject *obj = PyArray_SimpleNewFromData(num_axes, dims.data(), NPY_FLOAT32,
                                             blob_->mutable_cpu_data());
   PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(obj), self_);
   Py_INCREF(self_);
@@ -50,9 +53,12 @@ bp::object PyBlobWrap::get_data() {
 }
 
 bp::object PyBlobWrap::get_diff() {
-  npy_intp dims[] = {num(), channels(), height(), width()};
-
-  PyObject *obj = PyArray_SimpleNewFromData(4, dims, NPY_FLOAT32,
+  const int num_axes = blob_->num_axes();
+  vector<npy_intp> dims(num_axes);
+  for (int i = 0; i < num_axes; ++i) {
+    dims[i] = blob_->shape(i);
+  }
+  PyObject *obj = PyArray_SimpleNewFromData(num_axes, dims.data(), NPY_FLOAT32,
                                             blob_->mutable_cpu_diff());
   PyArray_SetBaseObject(reinterpret_cast<PyArrayObject *>(obj), self_);
   Py_INCREF(self_);
