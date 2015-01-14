@@ -82,3 +82,22 @@ docs/dev
 
 # CMake generated files
 *.gen.cmake
+python/Makefile
+src/caffe/Makefile
+src/caffe/cmake_install.cmake
+src/caffe/proto/Makefile
+src/caffe/proto/__init__.py
+src/caffe/proto/cmake_install.cmake
+src/caffe/test/Makefile
+src/caffe/test/cmake_install.cmake
+src/gtest/Makefile
+src/gtest/cmake_install.cmake
+*/CMakeFiles
+**/CMakeFiles
+*/*/CMakeFiles
+src/caffe/CMakeFiles
+src/caffe/CMakeFiles/*
+src/caffe/CMakeFiles
+src/caffe/proto/CMakeFiles/
+src/caffe/test/CMakeFiles
+src/gtest/CMakeFiles
