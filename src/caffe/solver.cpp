@@ -205,6 +205,10 @@ void Solver<Dtype>::Solve(const char* resume_file) {
       smoothed_loss += (loss - losses[idx]) / average_loss;
       losses[idx] = loss;
     }
+
+    if(smoothed_loss!=smoothed_loss){
+      LOG(FATAL) << "Iteration " << iter_ << ", loss diverged, GIVING UP! ";
+    }
     if (display) {
       LOG(INFO) << "Iteration " << iter_ << ", loss = " << smoothed_loss;
       const vector<Blob<Dtype>*>& result = net_->output_blobs();
