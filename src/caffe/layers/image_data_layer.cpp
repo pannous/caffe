@@ -106,6 +106,7 @@ void ImageDataLayer<Dtype>::InternalThreadEntry() {
   const int batch_size = image_data_param.batch_size();
   const int new_height = image_data_param.new_height();
   const int new_width = image_data_param.new_width();
+  const bool is_color = image_data_param.is_color();
 
   // datum scales
   const int lines_size = lines_.size();
