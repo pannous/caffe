@@ -1661,45 +1661,6 @@ upgrade_net_proto_text.bin/fast:
 .PHONY : upgrade_net_proto_text.bin/fast
 
 #=============================================================================
-# Target rules for targets named convert_cifar_data
-
-# Build rule for target.
-convert_cifar_data: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 convert_cifar_data
-.PHONY : convert_cifar_data
-
-# fast build rule for target.
-convert_cifar_data/fast:
-	$(MAKE) -f examples/CMakeFiles/convert_cifar_data.dir/build.make examples/CMakeFiles/convert_cifar_data.dir/build
-.PHONY : convert_cifar_data/fast
-
-#=============================================================================
-# Target rules for targets named convert_mnist_data
-
-# Build rule for target.
-convert_mnist_data: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 convert_mnist_data
-.PHONY : convert_mnist_data
-
-# fast build rule for target.
-convert_mnist_data/fast:
-	$(MAKE) -f examples/CMakeFiles/convert_mnist_data.dir/build.make examples/CMakeFiles/convert_mnist_data.dir/build
-.PHONY : convert_mnist_data/fast
-
-#=============================================================================
-# Target rules for targets named convert_mnist_siamese_data
-
-# Build rule for target.
-convert_mnist_siamese_data: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 convert_mnist_siamese_data
-.PHONY : convert_mnist_siamese_data
-
-# fast build rule for target.
-convert_mnist_siamese_data/fast:
-	$(MAKE) -f examples/CMakeFiles/convert_mnist_siamese_data.dir/build.make examples/CMakeFiles/convert_mnist_siamese_data.dir/build
-.PHONY : convert_mnist_siamese_data/fast
-
-#=============================================================================
 # Target rules for targets named pycaffe
 
 # Build rule for target.
@@ -1841,9 +1802,6 @@ help:
 	@echo "... train_net.bin"
 	@echo "... upgrade_net_proto_binary.bin"
 	@echo "... upgrade_net_proto_text.bin"
-	@echo "... convert_cifar_data"
-	@echo "... convert_mnist_data"
-	@echo "... convert_mnist_siamese_data"
 	@echo "... pycaffe"
 .PHONY : help
 
