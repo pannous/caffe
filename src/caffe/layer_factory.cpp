@@ -97,7 +97,7 @@ template ReLULayer<double>* GetReLULayer(const string& name,
       return new MinMaxLayer<Dtype>(param);
     }
 
-    REGISTER_LAYER_CREATOR(MinMax, GetMinMaxLayer);
+//    REGISTER_LAYER_CREATOR(MinMax, GetMinMaxLayer);
 
 // Get sigmoid layer according to engine.
 template <typename Dtype>
@@ -243,7 +243,7 @@ Layer<Dtype>* GetLayer(const LayerParameter& param) {
   case LayerParameter_LayerType_RELU:
     return GetReLULayer<Dtype>(name, param);
   case LayerParameter_LayerType_MINMAX:
-    return GetMinMaxLayer<Dtype>(name, param);
+    return GetMinMaxLayer<Dtype>(param);
   case LayerParameter_LayerType_SILENCE:
     return new SilenceLayer<Dtype>(param);
   case LayerParameter_LayerType_SIGMOID:
