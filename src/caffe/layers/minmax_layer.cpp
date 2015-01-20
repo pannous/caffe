@@ -12,10 +12,8 @@ void MinMaxLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   const Dtype* bottom_data = bottom[0]->cpu_data();
   Dtype* top_data = top[0]->mutable_cpu_data();
   const int count = bottom[0]->count();
-  Dtype negative_slope = this->layer_param_.MinMax_param().negative_slope();
   for (int i = 0; i < count; ++i) {
     top_data[i] =  std::max(Dtype(-1), std::min(bottom_data[i], Dtype(1)));
-
   }
 }
 

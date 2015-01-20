@@ -62,7 +62,8 @@ void Net<Dtype>::Init(const NetParameter& in_param) {
   bottom_need_backward_.resize(param.layers_size());
   for (int layer_id = 0; layer_id < param.layers_size(); ++layer_id) {
     const LayerParameter& layer_param = param.layers(layer_id);
-    layers_.push_back(shared_ptr<Layer<Dtype> >(GetLayer<Dtype>(layer_param)));
+    layers_.push_back(shared_ptr<Layer<Dtype> >(
+          LayerRegistry<Dtype>::CreateLayer(layer_param)));
     layer_names_.push_back(layer_param.name());
     LOG(INFO) << "Creating Layer " << layer_param.name();
     bool need_backward = false;
@@ -94,7 +95,7 @@ void Net<Dtype>::Init(const NetParameter& in_param) {
     }
     // After this layer is connected, set it up.
     LOG(INFO) << "Setting up " << layer_names_[layer_id];
-    layers_[layer_id]->SetUp(bottom_vecs_[layer_id], &top_vecs_[layer_id]);
+    layers_[layer_id]->SetUp(bottom_vecs_[layer_id], top_vecs_[layer_id]);
     for (int top_id = 0; top_id < top_vecs_[layer_id].size(); ++top_id) {
       if (blob_loss_weights_.size() <= top_id_vecs_[layer_id][top_id]) {
         blob_loss_weights_.resize(top_id_vecs_[layer_id][top_id] + 1, Dtype(0));
@@ -504,8 +505,8 @@ Dtype Net<Dtype>::ForwardFromTo(int start, int end) {
   Dtype loss = 0;
   for (int i = start; i <= end; ++i) {
     // LOG(ERROR) << "Forwarding " << layer_names_[i];
-    layers_[i]->Reshape(bottom_vecs_[i], &top_vecs_[i]);
-    Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], &top_vecs_[i]);
+    layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
+    Dtype layer_loss = layers_[i]->Forward(bottom_vecs_[i], top_vecs_[i]);
     loss += layer_loss;
     if (debug_info_) { ForwardDebugInfo(i); }
   }
@@ -570,7 +571,7 @@ void Net<Dtype>::BackwardFromTo(int start, int end) {
   for (int i = start; i >= end; --i) {
     if (layer_need_backward_[i]) {
       layers_[i]->Backward(
-          top_vecs_[i], bottom_need_backward_[i], &bottom_vecs_[i]);
+          top_vecs_[i], bottom_need_backward_[i], bottom_vecs_[i]);
       if (debug_info_) { BackwardDebugInfo(i); }
     }
   }
@@ -635,7 +636,7 @@ void Net<Dtype>::UpdateDebugInfo(const int param_id) {
 }
 
 template <typename Dtype>
-void Net<Dtype>::ShareTrainedLayersWith(Net* other) {
+void Net<Dtype>::ShareTrainedLayersWith(const Net* other) {
   int num_source_layers = other->layers().size();
   for (int i = 0; i < num_source_layers; ++i) {
     Layer<Dtype>* source_layer = other->layers()[i].get();
@@ -683,7 +684,7 @@ void Net<Dtype>::Backward() {
 template <typename Dtype>
 void Net<Dtype>::Reshape() {
   for (int i = 0; i < layers_.size(); ++i) {
-    layers_[i]->Reshape(bottom_vecs_[i], &top_vecs_[i]);
+    layers_[i]->Reshape(bottom_vecs_[i], top_vecs_[i]);
   }
 }
 
@@ -725,7 +726,7 @@ void Net<Dtype>::CopyTrainedLayersFrom(const string trained_filename) {
 }
 
 template <typename Dtype>
-void Net<Dtype>::ToProto(NetParameter* param, bool write_diff) {
+void Net<Dtype>::ToProto(NetParameter* param, bool write_diff) const {
   param->Clear();
   param->set_name(name_);
   // Add bottom and top
@@ -784,16 +785,16 @@ void Net<Dtype>::Update() {
 }
 
 template <typename Dtype>
-bool Net<Dtype>::has_blob(const string& blob_name) {
+bool Net<Dtype>::has_blob(const string& blob_name) const {
   return blob_names_index_.find(blob_name) != blob_names_index_.end();
 }
 
 template <typename Dtype>
 const shared_ptr<Blob<Dtype> > Net<Dtype>::blob_by_name(
-    const string& blob_name) {
+    const string& blob_name) const {
   shared_ptr<Blob<Dtype> > blob_ptr;
   if (has_blob(blob_name)) {
-    blob_ptr = blobs_[blob_names_index_[blob_name]];
+    blob_ptr = blobs_[blob_names_index_.find(blob_name)->second];
   } else {
     blob_ptr.reset((Blob<Dtype>*)(NULL));
     LOG(WARNING) << "Unknown blob name " << blob_name;
@@ -802,16 +803,16 @@ const shared_ptr<Blob<Dtype> > Net<Dtype>::blob_by_name(
 }
 
 template <typename Dtype>
-bool Net<Dtype>::has_layer(const string& layer_name) {
+bool Net<Dtype>::has_layer(const string& layer_name) const {
   return layer_names_index_.find(layer_name) != layer_names_index_.end();
 }
 
 template <typename Dtype>
 const shared_ptr<Layer<Dtype> > Net<Dtype>::layer_by_name(
-    const string& layer_name) {
+    const string& layer_name) const {
   shared_ptr<Layer<Dtype> > layer_ptr;
   if (has_layer(layer_name)) {
-    layer_ptr = layers_[layer_names_index_[layer_name]];
+    layer_ptr = layers_[layer_names_index_.find(layer_name)->second];
   } else {
     layer_ptr.reset((Layer<Dtype>*)(NULL));
     LOG(WARNING) << "Unknown layer name " << layer_name;

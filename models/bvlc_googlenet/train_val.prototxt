@@ -15,10 +15,9 @@ layers {
   transform_param {
     mirror: true
     crop_size: 224
-    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
-    # mean_value: 104
-    # mean_value: 117
-    # mean_value: 123
+    mean_value: 104
+    mean_value: 117
+    mean_value: 123
   }
 }
 layers {
@@ -37,10 +36,9 @@ layers {
   transform_param {
     mirror: false
     crop_size: 224
-    mean_file: "data/ilsvrc12/imagenet_mean.binaryproto"
-    # mean_value: 104
-    # mean_value: 117
-    # mean_value: 123
+    mean_value: 104
+    mean_value: 117
+    mean_value: 123
   }
 }
 layers {
