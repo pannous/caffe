@@ -93,7 +93,7 @@ REGISTER_LAYER_CREATOR(RELU, GetReLULayer);
     Layer<Dtype>* GetMinMaxLayer(const LayerParameter& param) {
       return new MinMaxLayer<Dtype>(param);
     }
-REGISTER_LAYER_CREATOR(MinMax, GetMinMaxLayer);
+REGISTER_LAYER_CREATOR(MINMAX, GetMinMaxLayer);
 
 // Get sigmoid layer according to engine.
 template <typename Dtype>
