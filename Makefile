@@ -1665,17 +1665,69 @@ upgrade_net_proto_text.bin/fast:
 .PHONY : upgrade_net_proto_text.bin/fast
 
 #=============================================================================
-# Target rules for targets named pycaffe
+# Target rules for targets named CMakeCXXCompilerId
 
 # Build rule for target.
-pycaffe: cmake_check_build_system
-	$(MAKE) -f CMakeFiles/Makefile2 pycaffe
-.PHONY : pycaffe
+CMakeCXXCompilerId: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeCXXCompilerId
+.PHONY : CMakeCXXCompilerId
 
 # fast build rule for target.
-pycaffe/fast:
-	$(MAKE) -f python/CMakeFiles/pycaffe.dir/build.make python/CMakeFiles/pycaffe.dir/build
-.PHONY : pycaffe/fast
+CMakeCXXCompilerId/fast:
+	$(MAKE) -f examples/CMakeFiles/CMakeCXXCompilerId.dir/build.make examples/CMakeFiles/CMakeCXXCompilerId.dir/build
+.PHONY : CMakeCXXCompilerId/fast
+
+#=============================================================================
+# Target rules for targets named convert_cifar_data
+
+# Build rule for target.
+convert_cifar_data: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 convert_cifar_data
+.PHONY : convert_cifar_data
+
+# fast build rule for target.
+convert_cifar_data/fast:
+	$(MAKE) -f examples/CMakeFiles/convert_cifar_data.dir/build.make examples/CMakeFiles/convert_cifar_data.dir/build
+.PHONY : convert_cifar_data/fast
+
+#=============================================================================
+# Target rules for targets named convert_mnist_data
+
+# Build rule for target.
+convert_mnist_data: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 convert_mnist_data
+.PHONY : convert_mnist_data
+
+# fast build rule for target.
+convert_mnist_data/fast:
+	$(MAKE) -f examples/CMakeFiles/convert_mnist_data.dir/build.make examples/CMakeFiles/convert_mnist_data.dir/build
+.PHONY : convert_mnist_data/fast
+
+#=============================================================================
+# Target rules for targets named convert_mnist_siamese_data
+
+# Build rule for target.
+convert_mnist_siamese_data: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 convert_mnist_siamese_data
+.PHONY : convert_mnist_siamese_data
+
+# fast build rule for target.
+convert_mnist_siamese_data/fast:
+	$(MAKE) -f examples/CMakeFiles/convert_mnist_siamese_data.dir/build.make examples/CMakeFiles/convert_mnist_siamese_data.dir/build
+.PHONY : convert_mnist_siamese_data/fast
+
+#=============================================================================
+# Target rules for targets named generate
+
+# Build rule for target.
+generate: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 generate
+.PHONY : generate
+
+# fast build rule for target.
+generate/fast:
+	$(MAKE) -f examples/CMakeFiles/generate.dir/build.make examples/CMakeFiles/generate.dir/build
+.PHONY : generate/fast
 
 # Help Target
 help:
@@ -1806,7 +1858,11 @@ help:
 	@echo "... train_net.bin"
 	@echo "... upgrade_net_proto_binary.bin"
 	@echo "... upgrade_net_proto_text.bin"
-	@echo "... pycaffe"
+	@echo "... CMakeCXXCompilerId"
+	@echo "... convert_cifar_data"
+	@echo "... convert_mnist_data"
+	@echo "... convert_mnist_siamese_data"
+	@echo "... generate"
 .PHONY : help
 
 
