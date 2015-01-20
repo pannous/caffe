@@ -488,6 +488,8 @@ LayerParameter_LayerType UpgradeV0LayerType(const string& type) {
     return LayerParameter_LayerType_POOLING;
   } else if (type == "relu") {
     return LayerParameter_LayerType_RELU;
+  }  else if (type == "minmax") {
+    return LayerParameter_LayerType_MINMAX;
   } else if (type == "sigmoid") {
     return LayerParameter_LayerType_SIGMOID;
   } else if (type == "softmax") {

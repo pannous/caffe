@@ -90,6 +90,15 @@ template ReLULayer<float>* GetReLULayer(const string& name,
 template ReLULayer<double>* GetReLULayer(const string& name,
     const LayerParameter& param);
 
+
+//MinMaxLayer according to engine.
+    template <typename Dtype>
+    Layer<Dtype>* GetMinMaxLayer(const LayerParameter& param) {
+      return new MinMaxLayer<Dtype>(param);
+    }
+
+//    REGISTER_LAYER_CREATOR(MinMax, GetMinMaxLayer);
+
 // Get sigmoid layer according to engine.
 template <typename Dtype>
 SigmoidLayer<Dtype>* GetSigmoidLayer(const string& name,
@@ -233,6 +242,8 @@ Layer<Dtype>* GetLayer(const LayerParameter& param) {
     return new PowerLayer<Dtype>(param);
   case LayerParameter_LayerType_RELU:
     return GetReLULayer<Dtype>(name, param);
+  case LayerParameter_LayerType_MINMAX:
+    return GetMinMaxLayer<Dtype>(param);
   case LayerParameter_LayerType_SILENCE:
     return new SilenceLayer<Dtype>(param);
   case LayerParameter_LayerType_SIGMOID:
@@ -264,3 +275,4 @@ template Layer<float>* GetLayer(const LayerParameter& param);
 template Layer<double>* GetLayer(const LayerParameter& param);
 
 }  // namespace caffe
+

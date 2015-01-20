@@ -358,6 +358,39 @@ class ReLULayer : public NeuronLayer<Dtype> {
       const vector<bool>& propagate_down, vector<Blob<Dtype>*>* bottom);
 };
 
+
+/**
+* @brief Rectified Linear Unit non-linearity @f$ y = \max(0, x) @f$.
+*        The simple max is fast to compute, and the function does not saturate.
+*/
+    template <typename Dtype>
+    class MinMaxLayer : public NeuronLayer<Dtype> {
+    public:
+        /**
+        * @param param provides ReLUParameter relu_param,
+        *     with ReLULayer options:
+        *   - negative_slope (\b optional, default 0).
+        *     the value @f$ \nu @f$ by which negative values are multiplied.
+        */
+        explicit MinMaxLayer(const LayerParameter& param)
+                : NeuronLayer<Dtype>(param) {}
+
+        virtual inline LayerParameter_LayerType type() const {
+            return LayerParameter_LayerType_MINMAX;
+        }
+
+    protected:
+        virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+                vector<Blob<Dtype>*>* top);
+        virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+                vector<Blob<Dtype>*>* top);
+
+        virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+                const vector<bool>& propagate_down, vector<Blob<Dtype>*>* bottom);
+        virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+                const vector<bool>& propagate_down, vector<Blob<Dtype>*>* bottom);
+    };
+
 #ifdef USE_CUDNN
 /**
  * @brief CuDNN acceleration of ReLULayer.
