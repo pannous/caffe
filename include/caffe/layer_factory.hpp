@@ -75,8 +75,8 @@ class LayerRegistry {
 
   // Get a layer using a LayerParameter.
   static Layer<Dtype>* CreateLayer(const LayerParameter& param) {
-    LOG(INFO) << "Creating layer " << param.name();
     const LayerParameter_LayerType& type = param.type();
+    LOG(INFO) << "Creating layer " << param.name() << " of type " << type;
     CreatorRegistry& registry = Registry();
     CHECK_EQ(registry.count(type), 1);
     return registry[type](param);
