@@ -1,4 +1,5 @@
-net: "mnist_autoencoder.relus.prototxt"
+#net: "mnist_autoencoder.relus.prototxt"
+net: "mnist_autoencoder.minmax.prototxt"
 #net: "mnist_autoencoder.prototxt"
 test_state: { stage: 'test-on-train' }
 test_iter: 500
@@ -8,13 +9,13 @@ test_interval: 500
 test_compute_loss: true
 base_lr: 0.0021
 lr_policy: "step"
-gamma: 0.1
+gamma: 0.01
 stepsize: 10000
 display: 100
 max_iter: 65000
 weight_decay: 0.0005
 snapshot: 10000
 snapshot_prefix: "mnist_autoencoder"
-momentum: 0.9
+momentum: 0.09
 # solver mode: CPU or GPU
 solver_mode: GPU

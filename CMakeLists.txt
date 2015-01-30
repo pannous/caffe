@@ -6,7 +6,7 @@ project( Caffe )
 option(CPU_ONLY "Build Caffe without GPU support" OFF)
 option(BUILD_PYTHON "Build Python wrapper" ON)
 option(BUILD_MATLAB "Build Matlab wrapper" ON)
-option(BUILD_EXAMPLES "Build examples" ON)
+option(BUILD_EXAMPLES "Build examples" OFF)
 option(BUILD_SHARED_LIBS "Build SHARED libs if ON and STATIC otherwise" OFF)
 
 if(NOT BLAS)
@@ -65,10 +65,7 @@ if(NOT CPU_ONLY)
     include_directories(${CUDA_INCLUDE_DIRS})
 
     set(CUDA_NVCC_FLAGS ${CUDA_NVCC_FLAGS}
-            -gencode arch=compute_20,code=sm_20
-            -gencode arch=compute_20,code=sm_21
-            -gencode arch=compute_30,code=sm_30
-            -gencode arch=compute_35,code=sm_35
+           -gencode arch=compute_50,code=sm_50
     )
 
     # https://github.com/ComputationalRadiationPhysics/picongpu/blob/master/src/picongpu/CMakeLists.txt

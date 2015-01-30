@@ -1,4 +1,4 @@
 #!/bin/bash
 
-./build/tools/caffe train \
+caffe train \
   --solver=examples/mnist/mnist_autoencoder_solver_adagrad.prototxt
