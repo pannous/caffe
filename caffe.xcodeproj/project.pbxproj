@@ -1,0 +1,198 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXFileReference section */
+		8C7B352F1A7CF4E000B2AE45 /* .build_debug */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .build_debug; sourceTree = "<group>"; };
+		8C7B35301A7CF4E000B2AE45 /* .build_release */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .build_release; sourceTree = "<group>"; };
+		8C7B35311A7CF4E000B2AE45 /* .Doxyfile */ = {isa = PBXFileReference; lastKnownFileType = text; path = .Doxyfile; sourceTree = "<group>"; };
+		8C7B35321A7CF4E000B2AE45 /* .DS_Store */ = {isa = PBXFileReference; lastKnownFileType = file; path = .DS_Store; sourceTree = "<group>"; };
+		8C7B35331A7CF4E000B2AE45 /* .git */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .git; sourceTree = "<group>"; };
+		8C7B35341A7CF4E000B2AE45 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
+		8C7B35351A7CF4E000B2AE45 /* .idea */ = {isa = PBXFileReference; lastKnownFileType = folder; path = .idea; sourceTree = "<group>"; };
+		8C7B35361A7CF4E000B2AE45 /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; path = .travis.yml; sourceTree = "<group>"; };
+		8C7B35371A7CF4E000B2AE45 /* build */ = {isa = PBXFileReference; lastKnownFileType = folder; path = build; sourceTree = "<group>"; };
+		8C7B35381A7CF4E000B2AE45 /* caffe */ = {isa = PBXFileReference; lastKnownFileType = folder; path = caffe; sourceTree = "<group>"; };
+		8C7B353F1A7CF4E000B2AE45 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		8C7B35411A7CF4E000B2AE45 /* CMakeScripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = CMakeScripts; sourceTree = "<group>"; };
+		8C7B35431A7CF4E000B2AE45 /* CONTRIBUTORS.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = CONTRIBUTORS.md; sourceTree = "<group>"; };
+		8C7B35451A7CF4E000B2AE45 /* distribute */ = {isa = PBXFileReference; lastKnownFileType = folder; path = distribute; sourceTree = "<group>"; };
+		8C7B35461A7CF4E000B2AE45 /* docs */ = {isa = PBXFileReference; lastKnownFileType = folder; path = docs; sourceTree = "<group>"; };
+		8C7B35481A7CF4E000B2AE45 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = "<group>"; };
+		8C7B35491A7CF4E000B2AE45 /* include */ = {isa = PBXFileReference; lastKnownFileType = folder; path = include; sourceTree = "<group>"; };
+		8C7B354A1A7CF4E000B2AE45 /* INSTALL.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = INSTALL.md; sourceTree = "<group>"; };
+		8C7B354B1A7CF4E000B2AE45 /* leveldb */ = {isa = PBXFileReference; lastKnownFileType = text; path = leveldb; sourceTree = "<group>"; };
+		8C7B354C1A7CF4E000B2AE45 /* lib */ = {isa = PBXFileReference; lastKnownFileType = folder; path = lib; sourceTree = "<group>"; };
+		8C7B354D1A7CF4E000B2AE45 /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		8C7B354E1A7CF4E000B2AE45 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		8C7B354F1A7CF4E000B2AE45 /* Makefile.config */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.config; sourceTree = "<group>"; };
+		8C7B35501A7CF4E000B2AE45 /* Makefile.config.example */ = {isa = PBXFileReference; lastKnownFileType = text; path = Makefile.config.example; sourceTree = "<group>"; };
+		8C7B35531A7CF4E000B2AE45 /* matlab */ = {isa = PBXFileReference; lastKnownFileType = folder; path = matlab; sourceTree = "<group>"; };
+		8C7B35541A7CF4E000B2AE45 /* models */ = {isa = PBXFileReference; lastKnownFileType = folder; path = models; sourceTree = "<group>"; };
+		8C7B35551A7CF4E000B2AE45 /* python */ = {isa = PBXFileReference; lastKnownFileType = folder; path = python; sourceTree = "<group>"; };
+		8C7B35561A7CF4E000B2AE45 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		8C7B35571A7CF4E000B2AE45 /* scripts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = scripts; sourceTree = "<group>"; };
+		8C7B35581A7CF4E000B2AE45 /* src */ = {isa = PBXFileReference; lastKnownFileType = folder; path = src; sourceTree = "<group>"; };
+		8C7B35591A7CF4E000B2AE45 /* test */ = {isa = PBXFileReference; lastKnownFileType = folder; path = test; sourceTree = "<group>"; };
+		8C7B355A1A7CF4E000B2AE45 /* tools */ = {isa = PBXFileReference; lastKnownFileType = folder; path = tools; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		8C7B35291A7CF4E000B2AE45 = {
+			isa = PBXGroup;
+			children = (
+				8C7B352F1A7CF4E000B2AE45 /* .build_debug */,
+				8C7B35301A7CF4E000B2AE45 /* .build_release */,
+				8C7B35311A7CF4E000B2AE45 /* .Doxyfile */,
+				8C7B35321A7CF4E000B2AE45 /* .DS_Store */,
+				8C7B35331A7CF4E000B2AE45 /* .git */,
+				8C7B35341A7CF4E000B2AE45 /* .gitignore */,
+				8C7B35351A7CF4E000B2AE45 /* .idea */,
+				8C7B35361A7CF4E000B2AE45 /* .travis.yml */,
+				8C7B35371A7CF4E000B2AE45 /* build */,
+				8C7B35381A7CF4E000B2AE45 /* caffe */,
+				8C7B353F1A7CF4E000B2AE45 /* CMakeLists.txt */,
+				8C7B35411A7CF4E000B2AE45 /* CMakeScripts */,
+				8C7B35431A7CF4E000B2AE45 /* CONTRIBUTORS.md */,
+				8C7B35451A7CF4E000B2AE45 /* distribute */,
+				8C7B35461A7CF4E000B2AE45 /* docs */,
+				8C7B35481A7CF4E000B2AE45 /* examples */,
+				8C7B35491A7CF4E000B2AE45 /* include */,
+				8C7B354A1A7CF4E000B2AE45 /* INSTALL.md */,
+				8C7B354B1A7CF4E000B2AE45 /* leveldb */,
+				8C7B354C1A7CF4E000B2AE45 /* lib */,
+				8C7B354D1A7CF4E000B2AE45 /* LICENSE */,
+				8C7B354E1A7CF4E000B2AE45 /* Makefile */,
+				8C7B354F1A7CF4E000B2AE45 /* Makefile.config */,
+				8C7B35501A7CF4E000B2AE45 /* Makefile.config.example */,
+				8C7B35531A7CF4E000B2AE45 /* matlab */,
+				8C7B35541A7CF4E000B2AE45 /* models */,
+				8C7B35551A7CF4E000B2AE45 /* python */,
+				8C7B35561A7CF4E000B2AE45 /* README.md */,
+				8C7B35571A7CF4E000B2AE45 /* scripts */,
+				8C7B35581A7CF4E000B2AE45 /* src */,
+				8C7B35591A7CF4E000B2AE45 /* test */,
+				8C7B355A1A7CF4E000B2AE45 /* tools */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXLegacyTarget section */
+		8C7B352E1A7CF4E000B2AE45 /* caffe */ = {
+			isa = PBXLegacyTarget;
+			buildArgumentsString = "$(ACTION)";
+			buildConfigurationList = 8C7B355B1A7CF4E000B2AE45 /* Build configuration list for PBXLegacyTarget "caffe" */;
+			buildPhases = (
+			);
+			buildToolPath = /usr/bin/make;
+			buildWorkingDirectory = /Users/me/dev/ai/frameworks/caffe;
+			dependencies = (
+			);
+			name = caffe;
+			passBuildSettingsInEnvironment = 1;
+			productName = caffe;
+		};
+/* End PBXLegacyTarget section */
+
+/* Begin PBXProject section */
+		8C7B352A1A7CF4E000B2AE45 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+			};
+			buildConfigurationList = 8C7B352D1A7CF4E000B2AE45 /* Build configuration list for PBXProject "caffe" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 8C7B35291A7CF4E000B2AE45;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8C7B352E1A7CF4E000B2AE45 /* caffe */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		8C7B352B1A7CF4E000B2AE45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Debug;
+		};
+		8C7B352C1A7CF4E000B2AE45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				COPY_PHASE_STRIP = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				SDKROOT = macosx10.6;
+			};
+			name = Release;
+		};
+		8C7B355C1A7CF4E000B2AE45 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = caffe.bin;
+			};
+			name = Debug;
+		};
+		8C7B355D1A7CF4E000B2AE45 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				PRODUCT_NAME = caffe.bin;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8C7B352D1A7CF4E000B2AE45 /* Build configuration list for PBXProject "caffe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C7B352B1A7CF4E000B2AE45 /* Debug */,
+				8C7B352C1A7CF4E000B2AE45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8C7B355B1A7CF4E000B2AE45 /* Build configuration list for PBXLegacyTarget "caffe" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8C7B355C1A7CF4E000B2AE45 /* Debug */,
+				8C7B355D1A7CF4E000B2AE45 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8C7B352A1A7CF4E000B2AE45 /* Project object */;
+}
