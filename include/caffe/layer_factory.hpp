@@ -44,6 +44,7 @@
 
 #include "caffe/common.hpp"
 #include "caffe/proto/caffe.pb.h"
+#include <boost/algorithm/string/predicate.hpp> // for quick case insensitive CreatorRegistry
 
 namespace caffe {
 
@@ -52,9 +53,19 @@ class Layer;
 
 template <typename Dtype>
 class LayerRegistry {
+  
+struct insensitive_key_comparer
+{
+    bool operator()(std::string a, std::string b) const
+    {
+      return !boost::iequals(a,b);
+    }
+};
+  
  public:
   typedef Layer<Dtype>* (*Creator)(const LayerParameter&);
   typedef std::map<string, Creator> CreatorRegistry;
+  // typedef std::map<string, Creator,insensitive_key_comparer> CreatorRegistry;
 
   static CreatorRegistry& Registry() {
     static CreatorRegistry* g_registry_ = new CreatorRegistry();

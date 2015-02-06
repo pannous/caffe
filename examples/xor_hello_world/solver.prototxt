@@ -1,6 +1,9 @@
-#net: "xor_net.prototxt"    # hardcoded weights/bias to illustrate analogy with perceptron
-#net: "xor_net.pure.prototxt" # xor_net.pure.prototxt as more standard example (no concat layer)
-net: "xor_net.minimal.prototxt" # euclidean loss -> no accuracy, but loss < 0.1 is fine (right?)
+# net: "xor_net.prototxt"    # hardcoded weights/bias to illustrate analogy with perceptron
+net: "xor_net.prototxt2"    # caffe layer version 2 format
+
+# net: "xor_net.pure.prototxt" # xor_net.pure.prototxt as more standard example (no concat layer)
+
+# net: "xor_net.minimal.prototxt" # euclidean loss -> no accuracy, but loss < 0.1 is fine (right?)
 
 test_iter: 1
 test_interval: 1
