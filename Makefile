@@ -264,6 +264,7 @@ endif
 # Debugging
 ifeq ($(DEBUG), 1)
 	COMMON_FLAGS += -DDEBUG -g -O0
+	CXX_FLAGS += -DDEBUG -g -O0
 	NVCCFLAGS += -G
 else
 	COMMON_FLAGS += -DNDEBUG -O2
