@@ -1,0 +1,21 @@
+net: "topics_net.prototxt"
+
+test_iter: 10
+test_interval: 10
+base_lr: 0.9
+
+#lr_policy: "step"
+#gamma: 0.9
+
+lr_policy: "inv"
+gamma: 0.001
+power: 0.75
+
+stepsize: 1000
+display: 10
+max_iter: 300000
+snapshot: 1000
+snapshot_prefix: "snapshot"
+momentum: 0.95
+weight_decay: 0.0005
+solver_mode: GPU
