@@ -9,7 +9,7 @@ base_lr: 0.9
 
 lr_policy: "inv"
 gamma: 0.001
-power: 0.75
+power: 0.1
 
 stepsize: 1000
 display: 10

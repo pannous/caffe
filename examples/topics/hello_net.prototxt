@@ -11,29 +11,29 @@ name: "text_hello_world_classification"
   }
 }
 
-layers {
-  name: "conv1"
-  type: CONVOLUTION
-  bottom: "data"
-  top: "conv1"
-  convolution_param {
-    num_output: 640
-    # kernel_size: 6
-    # kernel_size: 2
-    # kernel_h: 3
-    kernel_h: 10
-    # kernel_h: 1
-    kernel_w: 6
-    # kernel_w: 1
-   # stride: 6
-  }
-}
-layers {
-  name: "relu1"
-  type: RELU
-  bottom: "conv1"
-  top: "conv1"
-}
+# layers {
+#   name: "conv1"
+#   type: CONVOLUTION
+#   bottom: "data"
+#   top: "conv1"
+#   convolution_param {
+#     num_output: 640
+#     # kernel_size: 6
+#     # kernel_size: 2
+#     # kernel_h: 3
+#     kernel_h: 10
+#     # kernel_h: 1
+#     kernel_w: 6
+#     # kernel_w: 1
+#    # stride: 6
+#   }
+# }
+# layers {
+#   name: "relu1"
+#   type: RELU
+#   bottom: "conv1"
+#   top: "conv1"
+# }
 # layers {
 #   # name: "drop7"
 #   type: DROPOUT
@@ -47,10 +47,11 @@ layers {
 layers {
   name: "fc1"
   type: INNER_PRODUCT
-  bottom: "conv1"
+  bottom: "data"
+  # bottom: "conv1"
   top: "fc1"
   inner_product_param {
-    num_output: 400 # 120 needed!! 6*10*2 (why??)
+    num_output: 2000 # 120 needed!! 6*10*2 (why??)
     weight_filler {
       type: "xavier"
     }
@@ -72,14 +73,20 @@ layers {
   bottom: "fc1"
   top: "fc2"
   inner_product_param {
-    num_output: 1
-        # num_output: 2
+    # num_output: 1
+        num_output: 3
+         weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
   }
 }
 layers {
   name: "loss"
-  type: SIGMOID_CROSS_ENTROPY_LOSS  # n categories in 1 field!
-  # type: SOFTMAX_LOSS # n categories in n fields!
+  # type: SIGMOID_CROSS_ENTROPY_LOSS  # n categories in 1 field!
+  type: SOFTMAX_LOSS # n categories in n fields!
   # type: EUCLIDEAN_LOSS  # n categories in 1 field
   bottom: "fc2"
   bottom: "label"
