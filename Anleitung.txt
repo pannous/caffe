@@ -1,0 +1,49 @@
+@Kate @Yukun
+
+After running into of these issues a dozen times, they can now consistently be circumvented:
+
+There are two paths to compile caffe on OS X
+
+1) compile against <= CUDA 6.5 "libstdc++" in this case >>all<< the dependencies need to be re-compiled with "libstdc++" (harder, brew edit ... see install.html)
+
+2) compile against >= CUDA 7.0 "libc++" just make sure to have fresh dependencies (compiled with "libc++" by default) and remove libstdc++ stuff in dev branch Makefile
+
+
+
+I recommend choosing path number two:
+
+get CUDA 7.0 (RC)
+
+cd <caffe_root>
+
+git checkout dev
+edit Makefile and remove these two lines:
+
+  # CXXFLAGS += -stdlib=libstdc++ << we dont want libstdc++ in this approach
+
+  # LINKFLAGS += -stdlib=libstdc++
+
+export CXX="/usr/bin/clang++ -std=c++11 -stdlib=libc++"
+
+make clean
+Get rid and reinstall all dependencies if you have already done the libstdc++ brew edit stunt:
+    for x in snappy leveldb gflags glog szip hdf5 lmdb homebrew/science/opencv; do brew uninstall $x; brew install --fresh -vd $x; done
+    brew uninstall boost boost-python; brew install --fresh -vd boost boost-python
+    brew uninstall --force protobuf; brew install --with-python --fresh -vd protobuf
+
+Watch carefully for the output of
+
+brew install protobuf
+brew install opencv
+(etc)
+If you have some old libraries floating around you might have to do
+
+brew unlink protobuf && brew link protobuf
+
+
+Now everything should be beautifully aligned with libc++
+
+make
+and pray ;)
+PS:  next week the whole process will be streamlined by the core development team. if you can't get it to run now just wait one week...
+
