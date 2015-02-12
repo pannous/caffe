@@ -143,9 +143,9 @@ void ImageDataLayer<Dtype>::InternalThreadEntry() {
     }
   }
   batch_timer.Stop();
-  DLOG(INFO) << "Prefetch batch: " << batch_timer.MilliSeconds() << " ms.";
-  DLOG(INFO) << "     Read time: " << read_time / 1000 << " ms.";
-  DLOG(INFO) << "Transform time: " << trans_time / 1000 << " ms.";
+//  DLOG(INFO) << "Prefetch batch: " << batch_timer.MilliSeconds() << " ms.";
+//  DLOG(INFO) << "     Read time: " << read_time / 1000 << " ms.";
+//  DLOG(INFO) << "Transform time: " << trans_time / 1000 << " ms.";
 }
 
 INSTANTIATE_CLASS(ImageDataLayer);
