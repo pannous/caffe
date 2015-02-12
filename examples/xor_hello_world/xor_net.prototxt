@@ -1,5 +1,9 @@
 name: "SIMPLE_XOR_NET"
+<<<<<<< HEAD
   layers {
+=======
+layers {
+>>>>>>> e6c45c6c1459a24f3405f3d8c54af2a2787214dd
   name: "data"
   type: HDF5_DATA
   top: "data"
@@ -46,6 +50,7 @@ layers {
   top: "fc2"
   inner_product_param {
     num_output: 2
+<<<<<<< HEAD
     weight_filler {
       type: "gaussian"
       std: 0.01
@@ -54,11 +59,27 @@ layers {
       type: "constant"
       value: 0
     }
+=======
+    # weight_filler {
+    #   type: "gaussian"
+    #   std: 0.01
+    # }
+    # bias_filler {
+    #   type: "constant"
+    #   value: 0
+    # }
+>>>>>>> e6c45c6c1459a24f3405f3d8c54af2a2787214dd
   }
 }
 layers {
   name: "loss"
+<<<<<<< HEAD
   type: SOFTMAX_LOSS
+=======
+  # type: SIGMOID_CROSS_ENTROPY_LOSS  # n categories in 1 field!
+  type: SOFTMAX_LOSS # n categories in n fields!
+  # type: EUCLIDEAN_LOSS  # n categories in 1 field!?!
+>>>>>>> e6c45c6c1459a24f3405f3d8c54af2a2787214dd
   bottom: "fc2"
   bottom: "label"
   top: "loss"
