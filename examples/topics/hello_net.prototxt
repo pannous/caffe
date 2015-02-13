@@ -10,30 +10,40 @@ name: "text_hello_world_classification"
     batch_size: 4
   }
 }
-
-# layers {
-#   name: "conv1"
-#   type: CONVOLUTION
+# layers { # BAD! why?
+#   name: "data_drop"
+#   type: DROPOUT
 #   bottom: "data"
-#   top: "conv1"
-#   convolution_param {
-#     num_output: 640
-#     # kernel_size: 6
-#     # kernel_size: 2
-#     # kernel_h: 3
-#     kernel_h: 10
-#     # kernel_h: 1
-#     kernel_w: 6
-#     # kernel_w: 1
-#    # stride: 6
+#   top: "data"
+#   dropout_param {
+#     dropout_ratio: 0.5
 #   }
 # }
-# layers {
-#   name: "relu1"
-#   type: RELU
-#   bottom: "conv1"
-#   top: "conv1"
-# }
+
+layers {
+  name: "conv1"
+  type: CONVOLUTION
+  bottom: "data"
+  top: "conv1"
+  convolution_param {
+    num_output: 100
+    # kernel_size: 6
+    # kernel_size: 2
+    kernel_h: 6
+    # kernel_h: 3
+    # kernel_h: 10
+    # kernel_h: 1
+    # kernel_w: 6
+    kernel_w: 1
+   # stride: 6
+  }
+}
+layers {
+  name: "relu1"
+  type: RELU
+  bottom: "conv1"
+  top: "conv1"
+}
 # layers {
 #   # name: "drop7"
 #   type: DROPOUT
@@ -47,11 +57,11 @@ name: "text_hello_world_classification"
 layers {
   name: "fc1"
   type: INNER_PRODUCT
-  bottom: "data"
-  # bottom: "conv1"
+  # bottom: "data"
+  bottom: "conv1"
   top: "fc1"
   inner_product_param {
-    num_output: 2000 # 120 needed!! 6*10*2 (why??)
+    num_output: 400 # 10 needed min., 40 with dropout
     weight_filler {
       type: "xavier"
     }
@@ -66,6 +76,16 @@ layers {
   bottom: "fc1"
   top: "fc1"
 }
+# layers { # BAD! why?
+#   name: "drop1"
+#   type: DROPOUT
+#   bottom: "fc1"
+#   top: "fc1"
+#   dropout_param {
+#     dropout_ratio: 0.1
+#   }
+# }
+
 layers {
   name: "fc2"
   type: INNER_PRODUCT
@@ -74,8 +94,8 @@ layers {
   top: "fc2"
   inner_product_param {
     # num_output: 1
-        num_output: 3
-         weight_filler {
+    num_output: 2
+    weight_filler {
       type: "xavier"
     }
     bias_filler {
@@ -94,8 +114,14 @@ layers {
 }
 layers {
   name: "accuracy"
-  type: ACCURACY
+  type: ACCURACY #NEEDS 2 classes!!
   bottom: "fc2"
   bottom: "label"
   top: "accuracy"
+}
+layers {
+  name: "log_eloss"
+  type: RELU
+  bottom: "loss"
+  top: "log_eloss"
 }
