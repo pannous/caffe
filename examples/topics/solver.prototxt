@@ -18,4 +18,4 @@ snapshot: 1000
 snapshot_prefix: "snapshot"
 momentum: 0.95
 weight_decay: 0.0005
-solver_mode: GPU
+solver_mode: CPU

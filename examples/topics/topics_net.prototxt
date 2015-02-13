@@ -18,10 +18,16 @@ layers {
   bottom: "data"
   top: "conv1"
   convolution_param {
-    num_output: 4000
+    num_output: 100
 #    kernel_size: 3 
     kernel_h: 3
     kernel_w: 6
+      weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
 #    stride: 1 
   }
 }
@@ -59,7 +65,7 @@ layers {
   bottom: "pool1"
   top: "conv2"
   convolution_param {
-    num_output: 2560
+    num_output: 256
 #    pad: 0 
     kernel_h: 5
     kernel_w: 1
@@ -281,7 +287,7 @@ layers {
       type: "xavier"
     }
     bias_filler {
-      type: "constant"
+      type: "xavier"
     }
   }
 }
