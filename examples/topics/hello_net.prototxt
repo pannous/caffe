@@ -27,15 +27,14 @@ layers {
   top: "conv1"
   convolution_param {
     num_output: 100
-    # kernel_size: 6
-    # kernel_size: 2
     kernel_h: 6
-    # kernel_h: 3
-    # kernel_h: 10
-    # kernel_h: 1
-    # kernel_w: 6
     kernel_w: 1
-   # stride: 6
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
   }
 }
 layers {
@@ -54,6 +53,11 @@ layers {
 #   }
 # }
 
+
+layers{
+  type: SILENCE
+  bottom: "conv1"
+}
 layers {
   name: "fc1"
   type: INNER_PRODUCT
@@ -103,6 +107,8 @@ layers {
     }
   }
 }
+
+#  => fc2_fc2_0_split ?
 layers {
   name: "loss"
   # type: SIGMOID_CROSS_ENTROPY_LOSS  # n categories in 1 field!
