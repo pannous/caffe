@@ -588,7 +588,6 @@ protected:
 	int W_;
 	// eps
 	Dtype var_eps_;
-
 };
 
 }  // namespace caffe
