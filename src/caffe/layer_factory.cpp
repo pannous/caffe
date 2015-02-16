@@ -148,15 +148,28 @@ Layer<Dtype>* GetTanHLayer(const LayerParameter& param) {
 #endif
   } else {
     LOG(FATAL) << "Layer " << param.name() << " has unknown engine.";
-  }
+}
 }
 
 REGISTER_LAYER_CREATOR(TanH, GetTanHLayer);
 
-//   case LayerParameter_LayerType_BN:
-  //    return new BNLayer<Dtype>(param);
-  // case LayerParameter_LayerType_BNLL:
-  //   return new BNLLLayer<Dtype>(param);
+
+// // Get BN layer according to engine.
+// template <typename Dtype> Layer<Dtype>* GetBatchnormLayer(const LayerParameter& param) {
+//     return new BatchnormLayer<Dtype>(param);
+// }
+// REGISTER_LAYER_CREATOR(Batchnorm, GetBatchnormLayer);
+// REGISTER_LAYER_CREATOR(BATCHNORM, GetBatchnormLayer);
+// 
+
+// USE after INSTANTIATE_CLASS(BNLayer); :
+// REGISTER_LAYER_CLASS(BN); 
+// !! instead of
+// // Get BN layer according to engine.
+// template <typename Dtype> Layer<Dtype>* GetBNLayer(const LayerParameter& param) {
+//     return new BNLayer<Dtype>(param);
+// }
+// REGISTER_LAYER_CREATOR(BN, GetBNLayer);
 
 
 // Layers that use their constructor as their default creator should be

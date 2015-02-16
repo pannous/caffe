@@ -34,7 +34,7 @@ def parse_args():
 
 def main():
     args = parse_args()
-    net = caffe_pb2.NetParameter()
+        net = caffe_pb2.NetParameter()
     text_format.Merge(open(args.input_net_proto_file).read(), net)
     print 'Drawing net to %s' % args.output_image_file
     caffe.draw.draw_net_to_file(net, args.output_image_file, args.rankdir)

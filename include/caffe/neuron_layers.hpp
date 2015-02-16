@@ -653,6 +653,69 @@ class ThresholdLayer : public NeuronLayer<Dtype> {
   Dtype threshold_;
 };
 
+template <typename Dtype>
+class BatchnormLayer : public NeuronLayer<Dtype> {
+ public:
+  explicit BatchnormLayer(const LayerParameter& param) : NeuronLayer<Dtype>(param) {}
+
+  virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+
+  virtual inline const char* type() const { return "Batchnorm"; }
+  // virtual inline LayerParameter_LayerType type() const {
+  //   return LayerParameter_LayerType_BATCHNORM;
+  // }
+
+ protected:
+  virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+
+  int num_;
+  int bottom_size_;
+  Dtype var_epsilon_;
+  Blob<Dtype> batch_mean_;
+  Blob<Dtype> buffer_blob_;
+  Blob<Dtype> batch_variance_;
+};
+
+
+/**
+* @brief Batch Normalization per-channel with scale & shift linear transform.
+*/
+template <typename Dtype>
+// class BNLayer : public Layer<Dtype> { src/caffe/layers/bn_layer.cpp:288:1: error: allocating an object of abstract class type 'BNLayer<float>' REGISTER_LAYER_CLASS(BN); WHY??
+class BNLayer : public NeuronLayer<Dtype> {
+public:
+	explicit BNLayer(const LayerParameter& param)	: NeuronLayer<Dtype>(param) {}
+	virtual void LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+  virtual inline const char* type() const { return "BN"; }
+	virtual inline int ExactNumBottomBlobs() const { return 1; }
+	virtual inline int ExactNumTopBlobs() const { return 1; }
+
+protected:
+	virtual void Forward_cpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+	virtual void Forward_gpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top);
+	virtual void Backward_cpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+	virtual void Backward_gpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom);
+
+	// spatial mean & variance
+	Blob<Dtype> spatial_mean_, spatial_variance_;
+	// batch mean & variance
+	Blob<Dtype> batch_mean_, batch_variance_;
+	// buffer blob
+	Blob<Dtype> buffer_blob_;
+
+	// x_sum_multiplier is used to carry out sum using BLAS
+	Blob<Dtype> spatial_sum_multiplier_, batch_sum_multiplier_;
+
+	// dimension
+	int N_;
+	int C_;
+	int H_;
+	int W_;
+	// eps
+	Dtype var_eps_;
+};
+
 }  // namespace caffe
 
 #endif  // CAFFE_NEURON_LAYERS_HPP_

@@ -261,6 +261,7 @@ message ParamSpec {
 // Update the next available ID when you add a new LayerParameter field.
 //
 // LayerParameter next available layer-specific ID: 133 (last added: recurrent_param)
+// LayerParameter next available layer-specific ID: 134 BNParameter (ME)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -331,8 +332,16 @@ message LayerParameter {
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
   optional WindowDataParameter window_data_param = 129;
-  optional BNParameter bn_param = 130;
+  optional BNParameter bn_param = 134;
 }
+
+
+// Message that stores parameters used by BNLayer
+message BNParameter {
+  optional FillerParameter scale_filler = 1; // The filler for the scale
+  optional FillerParameter shift_filler = 2; // The filler for the shift
+}
+
 
 // Message that stores parameters used to apply transformation
 // to the data layer's data
@@ -794,6 +803,7 @@ message V1LayerParameter {
     ACCURACY = 1;
     ARGMAX = 30;
     BNLL = 2;
+    BN  = 99;
     CONCAT = 3;
     CONTRASTIVE_LOSS = 37;
     CONVOLUTION = 4;
@@ -872,6 +882,7 @@ message V1LayerParameter {
   optional TransformationParameter transform_param = 36;
   optional LossParameter loss_param = 42;
   optional V0LayerParameter layer = 1;
+  optional BNParameter bn_param = 98;
 }
 
 // DEPRECATED: V0LayerParameter is the old way of specifying layer parameters

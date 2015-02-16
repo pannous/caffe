@@ -16,4 +16,4 @@ snapshot: 10000
 snapshot_prefix: "examples/mnist/mnist_autoencoder"
 momentum: 0.9
 # solver mode: CPU or GPU
-solver_mode: GPU
+solver_mode: CPU

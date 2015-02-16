@@ -9,7 +9,8 @@
 namespace caffe {
 
 	template <typename Dtype>
-	void BNLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+  void BNLayer<Dtype>::LayerSetUp(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+  // void BNLayer<Dtype>::Reshape(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
 		top[0]->Reshape(bottom[0]->num(), bottom[0]->channels(),bottom[0]->height(), bottom[0]->width());
 
 		// Figure out the dimensions
@@ -283,6 +284,6 @@ namespace caffe {
 	STUB_GPU(BNLayer);
 #endif
 
-	INSTANTIATE_CLASS(BNLayer);
-
+INSTANTIATE_CLASS(BNLayer);
+REGISTER_LAYER_CLASS(BN);
 }  // namespace caffe
