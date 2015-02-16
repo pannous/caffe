@@ -153,6 +153,12 @@ Layer<Dtype>* GetTanHLayer(const LayerParameter& param) {
 
 REGISTER_LAYER_CREATOR(TanH, GetTanHLayer);
 
+//   case LayerParameter_LayerType_BN:
+  //    return new BNLayer<Dtype>(param);
+  // case LayerParameter_LayerType_BNLL:
+  //   return new BNLLLayer<Dtype>(param);
+
+
 // Layers that use their constructor as their default creator should be
 // registered in their corresponding cpp files. Do not register them here.
 }  // namespace caffe

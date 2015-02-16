@@ -331,6 +331,7 @@ message LayerParameter {
   optional TanHParameter tanh_param = 127;
   optional ThresholdParameter threshold_param = 128;
   optional WindowDataParameter window_data_param = 129;
+  optional BNParameter bn_param = 130;
 }
 
 // Message that stores parameters used to apply transformation
