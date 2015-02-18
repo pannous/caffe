@@ -1,0 +1,98 @@
+name: "text_topic_classification"
+layer {
+  name: "data"
+  type: "HDF5Data"
+  top: "data"
+  top: "label"
+  hdf5_data_param {
+    source: "embed_filelist.txt"
+    batch_size: 32
+  }
+}
+
+layer {
+  name: "embedded"
+  type: "Embed"
+  bottom: "data"
+  top: "embedded_data"
+  param {
+    lr_mult: 1
+  }
+  embed_param {
+    bias_term: false
+    input_dim: 256  # = chars (0 for EOS)
+    # input_dim: 8801  # = vocab_size + 1 (for EOS)
+    num_output: 1000
+    weight_filler {
+      type: "xavier"
+    }
+  }
+}
+
+layer {
+  name: "predict"
+  type: "InnerProduct"
+  bottom: "embedded_data"
+  top: "predict"
+  param {
+    lr_mult: 1
+    decay_mult: 1
+  }
+  param {
+    lr_mult: 2
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 200
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
+    axis: 2
+  }
+}
+
+layer {
+  name: "predict2"
+  type: "InnerProduct"
+  bottom: "predict"
+  top: "predict2"
+  inner_product_param {
+    num_output: 50
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
+    axis: 2
+  }
+}
+
+layer {
+  name: "cross_entropy_loss"
+  type: "SoftmaxWithLoss"
+  bottom: "predict2"
+  bottom: "label"
+  top: "cross_entropy_loss"
+  # loss_weight: 20
+  #  loss_param {
+  #    ignore_label: -1
+  #  }
+   softmax_param {
+     axis: 2
+   }
+}
+layer {
+  name: "accuracy"
+  type: "Accuracy"
+  bottom: "predict2"
+  bottom: "label"
+  top: "accuracy"
+  # include { phase: TEST }
+  # loss_param {
+  #   ignore_label: -1
+  # }
+}
