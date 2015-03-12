@@ -78,6 +78,12 @@ class AccuracyLayer : public Layer<Dtype> {
     }
   }
 
+
+  /// Whether to ignore instances with a certain label.
+  bool has_ignore_label_;
+  /// The label indicating that an instance should be ignored.
+  int ignore_label_;
+
   int label_axis_, outer_num_, inner_num_;
 
   int top_k_;
