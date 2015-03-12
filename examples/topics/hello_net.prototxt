@@ -1,0 +1,133 @@
+# This file is for the net_surgery.ipynb example notebook.
+name: "text_hello_world_classification"
+  layers {
+  name: "data"
+  type: HDF5_DATA
+  top: "data"
+  top: "label"
+  hdf5_data_param {
+    source: "hello_filelist.txt"
+    batch_size: 4
+  }
+}
+# layers { # BAD! why?
+#   name: "data_drop"
+#   type: DROPOUT
+#   bottom: "data"
+#   top: "data"
+#   dropout_param {
+#     dropout_ratio: 0.5
+#   }
+# }
+
+layers {
+  name: "conv1"
+  type: CONVOLUTION
+  bottom: "data"
+  top: "conv1"
+  convolution_param {
+    num_output: 100
+    kernel_h: 6
+    kernel_w: 1
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
+  }
+}
+layers {
+  name: "relu1"
+  type: RELU
+  bottom: "conv1"
+  top: "conv1"
+}
+# layers {
+#   # name: "drop7"
+#   type: DROPOUT
+#   bottom: "conv1"
+#   top: "conv1"
+#   dropout_param {
+#     dropout_ratio: 0.5
+#   }
+# }
+
+
+layers{
+  type: SILENCE
+  bottom: "conv1"
+}
+layers {
+  name: "fc1"
+  type: INNER_PRODUCT
+  # bottom: "data"
+  bottom: "conv1"
+  top: "fc1"
+  inner_product_param {
+    num_output: 400 # 10 needed min., 40 with dropout
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
+  }
+}
+layers {
+  name: "relu1"
+  type: RELU
+  bottom: "fc1"
+  top: "fc1"
+}
+# layers { # BAD! why?
+#   name: "drop1"
+#   type: DROPOUT
+#   bottom: "fc1"
+#   top: "fc1"
+#   dropout_param {
+#     dropout_ratio: 0.1
+#   }
+# }
+
+layers {
+  name: "fc2"
+  type: INNER_PRODUCT
+  # bottom: "conv1"
+  bottom: "fc1"
+  top: "fc2"
+  inner_product_param {
+    # num_output: 1
+    num_output: 2
+    weight_filler {
+      type: "xavier"
+    }
+    bias_filler {
+      type: "xavier"
+    }
+  }
+}
+
+#  => fc2_fc2_0_split ?
+layers {
+  name: "loss"
+  # type: SIGMOID_CROSS_ENTROPY_LOSS  # n categories in 1 field!
+  type: SOFTMAX_LOSS # n categories in n fields!
+  # type: EUCLIDEAN_LOSS  # n categories in 1 field
+  bottom: "fc2"
+  bottom: "label"
+  top: "loss"
+}
+layers {
+  name: "accuracy"
+  type: ACCURACY #NEEDS 2 classes!!
+  bottom: "fc2"
+  bottom: "label"
+  top: "accuracy"
+}
+layers {
+  name: "log_eloss"
+  type: RELU
+  bottom: "loss"
+  top: "log_eloss"
+}

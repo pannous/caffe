@@ -1,0 +1,23 @@
+net: "hello_net.prototxt"
+# net: "hello_flat_net.prototxt"
+
+test_iter: 10
+test_interval: 10
+base_lr: 0.9
+
+
+#gamma: 0.9
+lr_policy: "step"
+# lr_policy: "inv"
+gamma: 0.001
+power: 0.1
+# solver_type: ADAGRAD
+
+stepsize: 1000
+display: 10
+max_iter: 30
+snapshot: 100000
+snapshot_prefix: "snapshot"
+# momentum: 0.95
+weight_decay: 0.0005
+solver_mode: CPU
