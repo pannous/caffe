@@ -88,7 +88,7 @@ message NetParameter {
 // NOTE
 // Update the next available ID when you add a new SolverParameter field.
 //
-// SolverParameter next available ID: 36 (last added: clip_gradients)
+// SolverParameter next available ID: 37 (last added: iter_size)
 message SolverParameter {
   //////////////////////////////////////////////////////////////////////////////
   // Specifying the train and test networks
@@ -141,6 +141,7 @@ message SolverParameter {
   // Display the loss averaged over the last average_loss iterations
   optional int32 average_loss = 33 [default = 1];
   optional int32 max_iter = 7; // the maximum number of iterations
+  optional int32 iter_size = 36 [default = 1];
   optional string lr_policy = 8; // The learning rate decay policy.
   optional float gamma = 9; // The parameter to compute the learning rate.
   optional float power = 10; // The parameter to compute the learning rate.
@@ -259,7 +260,7 @@ message ParamSpec {
 // NOTE
 // Update the next available ID when you add a new LayerParameter field.
 //
-// LayerParameter next available layer-specific ID: 132 (last added: prelu_param)
+// LayerParameter next available layer-specific ID: 134 (last added: recurrent_param)
 message LayerParameter {
   optional string name = 1; // the layer name
   optional string type = 2; // the layer type
@@ -311,6 +312,7 @@ message LayerParameter {
   optional DropoutParameter dropout_param = 108;
   optional DummyDataParameter dummy_data_param = 109;
   optional EltwiseParameter eltwise_param = 110;
+  optional EmbedParameter embed_param = 131;
   optional ExpParameter exp_param = 111;
   optional HDF5DataParameter hdf5_data_param = 112;
   optional HDF5OutputParameter hdf5_output_param = 113;
@@ -323,9 +325,11 @@ message LayerParameter {
   optional MVNParameter mvn_param = 120;
   optional PoolingParameter pooling_param = 121;
   optional PowerParameter power_param = 122;
-  optional PReLUParameter prelu_param = 131;
+  optional PReLUParameter prelu_param = 139;
   optional PythonParameter python_param = 130;
+  optional RecurrentParameter recurrent_param = 133;
   optional ReLUParameter relu_param = 123;
+  optional ReshapeParameter reshape_param = 132;
   optional SigmoidParameter sigmoid_param = 124;
   optional SoftmaxParameter softmax_param = 125;
   optional SliceParameter slice_param = 126;
@@ -369,15 +373,11 @@ message AccuracyParameter {
   // class (i.e. argmax).
   optional uint32 top_k = 1 [default = 1];
 
-  // The "label" axis of the prediction blob, whose argmax corresponds to the
-  // predicted label -- may be negative to index from the end (e.g., -1 for the
-  // last axis).  For example, if axis == 1 and the predictions are
-  // (N x C x H x W), the label blob is expected to contain N*H*W ground truth
-  // labels with integer values in {0, 1, ..., C-1}.
-  optional int32 axis = 2 [default = 1];
-
-  // If specified, ignore instances with the given label.
-  optional int32 ignore_label = 3;
+  // Controls the denominator in the computed accuracy = #correct / denominator.
+  // Must be a positive number, or the default of 0, for the total input weight.
+  // If no input weights are used, the denominator is the batch size, as the
+  // weights each default to 1.
+  optional float denominator = 2 [default = 0];
 }
 
 // Message that stores parameters used by ArgMaxLayer
@@ -500,6 +500,24 @@ message EltwiseParameter {
   // Whether to use an asymptotically slower (for >2 inputs) but stabler method
   // of computing the gradient for the PROD operation. (No effect for SUM op.)
   optional bool stable_prod_grad = 3 [default = true];
+
+  // If true and the EltwiseOp is SUM, the last bottom blob is a singleton
+  // coefficient for the first N-1 bottom blobs, with shape (N-1, 1, 1, 1).
+  optional bool coeff_blob = 4 [default = false];
+}
+
+// Message that stores parameters used by EmbedLayer
+message EmbedParameter {
+  optional uint32 num_output = 1; // The number of outputs for the layer
+  // The input is given as integers to be interpreted as one-hot
+  // vector indices with dimension num_input.  Hence num_input should be
+  // 1 greater than the maximum possible input value.
+  optional uint32 input_dim = 2;
+
+  optional bool bias_term = 3 [default = true]; // Whether to use a bias term
+  optional FillerParameter weight_filler = 4; // The filler for the weight
+  optional FillerParameter bias_filler = 5; // The filler for the bias
+
 }
 
 // Message that stores parameters used by ExpLayer
@@ -657,6 +675,26 @@ message PowerParameter {
 message PythonParameter {
   optional string module = 1;
   optional string layer = 2;
+}
+
+// Message that stores parameters used by ReshapeLayer
+message ReshapeParameter {
+  // The new shape of the Blob. Must have the same "count" (product of
+  // dimensions) as the input Blob.
+  optional BlobShape shape = 1;
+}
+
+// Message that stores parameters used by RecurrentLayer
+message RecurrentParameter {
+  // The dimension of the output (and usually hidden state) representation --
+  // must be explicitly set to non-zero.
+  optional uint32 num_output = 1 [default = 0];
+
+  optional FillerParameter weight_filler = 2; // The filler for the weight
+  optional FillerParameter bias_filler = 3; // The filler for the bias
+
+  // Whether to enable displaying debug_info in the unrolled recurrent net.
+  optional bool debug_info = 4 [default = false];
 }
 
 // Message that stores parameters used by ReLULayer
