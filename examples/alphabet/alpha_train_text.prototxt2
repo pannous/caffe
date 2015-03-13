@@ -1,43 +1,49 @@
 name: "alpha"
-layers {
+layer {
   name: "alpha"
-  type: IMAGE_DATA
+  type: "ImageData"
   top: "data"
   top: "label"
+  include {
+    phase: TRAIN
+  }
+  transform_param {
+    scale: 0.00390625
+  }
   image_data_param {
     source: "training_index.txt"
     batch_size: 500
     is_color: false
   }
+}
+layer {
+  name: "alpha"
+  type: "ImageData"
+  top: "data"
+  top: "label"
+  include {
+    phase: TEST
+  }
   transform_param {
     scale: 0.00390625
   }
-  include: { phase: TRAIN }
-}
-layers {
-
-  name: "alpha"
-  type: IMAGE_DATA
-  top: "data"
-  top: "label"
   image_data_param {
     source: "test_index.txt"
     batch_size: 500
     is_color: false
   }
-  transform_param {
-    scale: 0.00390625
-  }
-  include: { phase: TEST }
 }
-
-layers {
+layer {
   name: "conv1"
-  type: CONVOLUTION
+  type: "Convolution"
   bottom: "data"
   top: "conv1"
-  blobs_lr: 1
-  blobs_lr: 2
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
   convolution_param {
     num_output: 20
     kernel_size: 5
@@ -50,13 +56,17 @@ layers {
     }
   }
 }
-layers {
+layer {
   name: "conv2"
-  type: CONVOLUTION
+  type: "Convolution"
   bottom: "conv1"
   top: "conv2"
-  blobs_lr: 1
-  blobs_lr: 2
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
   convolution_param {
     num_output: 50
     kernel_size: 5
@@ -69,19 +79,23 @@ layers {
     }
   }
 }
-layers{
-			name: "dropout"
-			type: DROPOUT
-			bottom: "conv2"
-			top: "dropout"
-} 
-layers {
+layer {
+  name: "dropout"
+  type: "Dropout"
+  bottom: "conv2"
+  top: "dropout"
+}
+layer {
   name: "ip1"
-  type: INNER_PRODUCT
+  type: "InnerProduct"
   bottom: "dropout"
   top: "ip1"
-  blobs_lr: 1
-  blobs_lr: 2
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
   inner_product_param {
     num_output: 500
     weight_filler {
@@ -92,20 +106,24 @@ layers {
     }
   }
 }
-layers {
+layer {
   name: "relu1"
-  # type: PReLU
-  type: RELU
+  # type: "ReLU"
+  type: "PReLU"
   bottom: "ip1"
   top: "ip1"
 }
-layers {
+layer {
   name: "ip2"
-  type: INNER_PRODUCT
+  type: "InnerProduct"
   bottom: "ip1"
   top: "ip2"
-  blobs_lr: 1
-  blobs_lr: 2
+  param {
+    lr_mult: 1
+  }
+  param {
+    lr_mult: 2
+  }
   inner_product_param {
     num_output: 36
     weight_filler {
@@ -116,17 +134,16 @@ layers {
     }
   }
 }
-layers {
+layer {
   name: "accuracy"
-  type: ACCURACY
+  type: "Accuracy"
   bottom: "ip2"
   bottom: "label"
   top: "accuracy"
-#  include: { phase: TEST }
 }
-layers {
+layer {
   name: "loss"
-  type: SOFTMAX_LOSS
+  type: "SoftmaxWithLoss"
   bottom: "ip2"
   bottom: "label"
   top: "loss"

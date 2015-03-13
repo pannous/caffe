@@ -1,11 +1,11 @@
 # The train/test net protocol buffer definition
-net: "alpha_train_text.prototxt"
+net: "alpha_train_text.prototxt2"
 
 # test_iter specifies how many forward passes the test should carry out.
 test_iter: 25
 
 # Carry out testing every 500 training iterations.
-test_interval: 500
+test_interval: 20
 
 # The base learning rate, momentum and the weight decay of the network.
 base_lr: 0.01
@@ -23,4 +23,4 @@ max_iter: 1300
 snapshot: 100
 snapshot_prefix: "alpha"
 # solver mode: CPU or GPU
-solver_mode: GPU
+solver_mode: CPU
