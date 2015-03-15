@@ -1,5 +1,5 @@
 // #ifdef make_alphabet_example
-#ifdef cairo
+// #ifdef cairo
 #include <opencv2/opencv.hpp>
 #include <string>
 #include <stdlib.h> // system
@@ -112,6 +112,6 @@ int main(){
   cv::waitKey(0);
         // wait for keypress  
 }
-#else
-int main(){}
-#endif
+// #else
+// int main(){}
+// #endif
