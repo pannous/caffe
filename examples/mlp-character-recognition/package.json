@@ -1,0 +1,16 @@
+{
+  "name": "mlp-character-recognition",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Mateo Gianolio",
+  "license": "MIT",
+  "dependencies": {
+    "canvas": "^1.2.1",
+    "pngjs": "^0.4.0",
+    "synaptic": "^0.1.7"
+  }
+}
