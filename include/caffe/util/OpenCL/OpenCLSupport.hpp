@@ -108,7 +108,7 @@ namespace caffe {
 namespace OpenCL {
 
 	int64_t getTickCount();
-	double getTickFrequency();
+	float getTickFrequency();
 
 //	bool init();
 

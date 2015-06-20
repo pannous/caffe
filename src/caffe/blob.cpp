@@ -133,7 +133,7 @@ void Blob<Dtype>::ShareDiff(const Blob& other) {
 }
 
 // The "update" method is used for parameter blobs in a Net, which are stored
-// as Blob<float> or Blob<double> -- hence we do not define it for
+// as Blob<float> or Blob<float> -- hence we do not define it for
 // Blob<int> or Blob<unsigned int>.
 template <> void Blob<unsigned int>::Update() { NOT_IMPLEMENTED; }
 template <> void Blob<int>::Update() { NOT_IMPLEMENTED; }

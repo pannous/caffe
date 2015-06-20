@@ -303,7 +303,6 @@ bool clLRNFillScale(const int nthreads, const T* in,
 	return true;
 }
 template bool clLRNFillScale<float>(const int nthreads, const float* in, const int num, const int channels, const int height, const int width, const int size, const float alpha_over_size, const float k, float* scale);
-template bool clLRNFillScale<double>(const int nthreads, const double* in, const int num, const int channels, const int height, const int width, const int size, const double alpha_over_size, const double k, double* scale);
 
 template<typename T>
 bool clLRNComputeOutput(const int nthreads, const T* in, const T* scale, const T negative_beta, T* out) {
@@ -347,7 +346,6 @@ bool clLRNComputeOutput(const int nthreads, const T* in, const T* scale, const T
 	return true;
 }
 template bool clLRNComputeOutput<float>(const int nthreads, const float* in, const float* scale, const float negative_beta, float* out);
-template bool clLRNComputeOutput<double>(const int nthreads, const double* in, const double* scale, const double negative_beta, double* out);
 
 template<typename T>
 bool clLRNComputeDiff(const int nthreads, const T* bottom_data, const T* top_data, const T* scale, const T* top_diff, const int num, const int channels, const int height, const int width, const int size2, const T negative_beta, const T cache_ratio, T* bottom_diff) {
@@ -399,7 +397,6 @@ bool clLRNComputeDiff(const int nthreads, const T* bottom_data, const T* top_dat
 	return true;
 }
 template bool clLRNComputeDiff<float>(const int nthreads, const float* bottom_data, const float* top_data, const float* scale, const float* top_diff, const int num, const int channels, const int height, const int width, const int size, const float negative_beta, const float cache_ratio, float* bottom_diff);
-template bool clLRNComputeDiff<double>(const int nthreads, const double* bottom_data, const double* top_data, const double* scale, const double* top_diff, const int num, const int channels, const int height, const int width, const int size, const double negative_beta, const double cache_ratio, double* bottom_diff);
 
 } // namespace OpenCL
 

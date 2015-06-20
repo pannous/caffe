@@ -261,9 +261,9 @@ void caffe_gpu_##name<float>(const int n, const float* x, float* y) { \
       n, x, y); \
 } \
 template <> \
-void caffe_gpu_##name<double>(const int n, const double* x, double* y) { \
+void caffe_gpu_##name<float>(const int n, const float* x, float* y) { \
   /* NOLINT_NEXT_LINE(whitespace/operators) */ \
-  name##_kernel<double><<<CAFFE_GET_BLOCKS(n), CAFFE_CUDA_NUM_THREADS>>>( \
+  name##_kernel<float><<<CAFFE_GET_BLOCKS(n), CAFFE_CUDA_NUM_THREADS>>>( \
       n, x, y); \
 }
 

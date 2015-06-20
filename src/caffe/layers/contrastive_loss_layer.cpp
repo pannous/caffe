@@ -150,7 +150,6 @@ bool clCLLForward(
 	return true;
 }
 template bool clCLLForward<float>(const int count, const int channels, const float margin, const float alpha, const float* y, const float* diff, const float* dist_sq, float *bottom_diff);
-template bool clCLLForward<double>(const int count, const int channels, const double margin, const double alpha, const double* y, const double* diff, const double* dist_sq, double *bottom_diff);
 } // namespace OpenCL
 
 template<typename Dtype>

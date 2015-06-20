@@ -226,17 +226,19 @@ const char* what(cl_int value) {
 	return "unknown error code";
 }
 
+#ifdef __linux__
 int64_t getTickCount() {
 	timespec t;
 	clock_gettime(CLOCK_MONOTONIC, &t);
 	return t.tv_nsec;
 }
 
-double getTickFrequency() {
+float getTickFrequency() {
 	timespec t;
 	clock_getres(CLOCK_MONOTONIC, &t);
-	return (double) t.tv_nsec;
+	return (float) t.tv_nsec;
 }
+#endif
 
 template<typename T>
 std::string clGetKernelName(std::string name) {
@@ -247,8 +249,8 @@ std::string clGetKernelName(std::string name) {
 	if ( typeid(T) == typeid(float) ) {
 		ss<<"Float";
 	}
-	if ( typeid(T) == typeid(double) ) {
-		ss<<"Double";
+	if ( typeid(T) == typeid(float) ) {
+		ss<<"Float";
 	}
 	if ( typeid(T) == typeid(char) ) {
 		ss<<"Char";
@@ -259,7 +261,6 @@ std::string clGetKernelName(std::string name) {
 
 	return ss.str();
 }
-template std::string clGetKernelName<double>(std::string name);
 template std::string clGetKernelName<float>(std::string name);
 
 bool clMalloc(void** virtualPtr, size_t size) {
@@ -385,8 +386,6 @@ bool clMemset(void* virtualPtr, const T alpha, const size_t Bytes) {
 template bool clMemset<char>(void* gpuPtr, const char alpha, const size_t N);
 template bool clMemset<int>(void* gpuPtr, const int alpha, const size_t N);
 template bool clMemset<float>(void* gpuPtr, const float alpha, const size_t N);
-template bool clMemset<double>(void* gpuPtr, const double alpha,
-                                const size_t N);
 
 template<typename T>
 bool clGPU2GPU(const void* src, void* dst, size_t Bytes) {
@@ -460,8 +459,6 @@ bool clGPU2GPU(const void* src, void* dst, size_t Bytes) {
 template bool clGPU2GPU<char>(const void* src, void* dst, size_t Bytes);
 template bool clGPU2GPU<int>(const void* src, void* dst, size_t Bytes);
 template bool clGPU2GPU<float>(const void* src, void* dst, size_t Bytes);
-template bool clGPU2GPU<double>(const void* src, void* dst, size_t Bytes);
-
 
 bool clMemcpy(void* virtualDstPtr, const void* virtualSrcPtr, size_t size, int type) {
   OpenCLPlatform& pf = OpenCLManager::CurrentPlatform();
@@ -849,8 +846,6 @@ template bool clSetKernelTypeArg<unsigned int>(unsigned int variable, unsigned i
 template bool clSetKernelTypeArg<const unsigned int>(const unsigned int variable, unsigned int& idx, cl_kernel* kernel);
 template bool clSetKernelTypeArg<float>(float variable, unsigned int& idx, cl_kernel* kernel);
 template bool clSetKernelTypeArg<const float>(const float variable, unsigned int& idx, cl_kernel* kernel);
-template bool clSetKernelTypeArg<double>(double variable, unsigned int& idx, cl_kernel* kernel);
-template bool clSetKernelTypeArg<const double>(const double variable, unsigned int& idx, cl_kernel* kernel);
 
 template<typename T>
 bool clBLASasum(const int N, const void* array_virtual, T* y) {
@@ -887,7 +882,7 @@ bool clBLASasum(const int N, const void* array_virtual, T* y) {
 		}
 	}
 
-	if ( typeid(T) == typeid(double) ) {
+	if ( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK(clblasDasum(N, (cl_mem) asum_logical, 0, (cl_mem) array_logical, 0, 1, (cl_mem) buf_logical, 1, queue, 0, NULL, NULL)) ) {
 			return false;
 		}
@@ -897,7 +892,6 @@ bool clBLASasum(const int N, const void* array_virtual, T* y) {
 	return true;
 }
 template bool clBLASasum<float>(const int N, const void* array_GPU_ptr, float* y);
-template bool clBLASasum<double>(const int N, const void* array_GPU_ptr, double* y);
 
 template<typename T>
 bool clsign(const int n, const void* array_GPU_x, void* array_GPU_y) {
@@ -937,7 +931,6 @@ bool clsign(const int n, const void* array_GPU_x, void* array_GPU_y) {
 	return true;
 }
 template bool clsign<float>(const int n, const void* array_GPU_x, void* array_GPU_y);
-template bool clsign<double>(const int n, const void* array_GPU_x, void* array_GPU_y);
 
 template<typename T>
 bool clsgnbit(const int n, const void* array_GPU_x, void* array_GPU_y) {
@@ -977,7 +970,6 @@ bool clsgnbit(const int n, const void* array_GPU_x, void* array_GPU_y) {
 	return true;
 }
 template bool clsgnbit<float>(const int n, const void* array_GPU_x, void* array_GPU_y);
-template bool clsgnbit<double>(const int n, const void* array_GPU_x, void* array_GPU_y);
 
 template<typename T>
 bool clabs(const int n, const void* array_GPU_x, void* array_GPU_y) {
@@ -1017,7 +1009,6 @@ bool clabs(const int n, const void* array_GPU_x, void* array_GPU_y) {
 	return true;
 }
 template bool clabs<float>(const int n, const void* array_GPU_x, void* array_GPU_y);
-template bool clabs<double>(const int n, const void* array_GPU_x, void* array_GPU_y);
 
 template<typename T>
 bool cldiv(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z) {
@@ -1058,7 +1049,6 @@ bool cldiv(const int n, const void* array_GPU_x, const void* array_GPU_y, void* 
 	return true;
 }
 template bool cldiv<float>(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z);
-template bool cldiv<double>(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z);
 
 template<typename T>
 bool clmul(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z) {
@@ -1099,7 +1089,6 @@ bool clmul(const int n, const void* array_GPU_x, const void* array_GPU_y, void* 
 	return true;
 }
 template bool clmul<float>(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z);
-template bool clmul<double>(const int n, const void* array_GPU_x, const void* array_GPU_y, void* array_GPU_z);
 
 template<typename T>
 bool clBLASscal(const int n, const float alpha, const void* array_x_virtual, void* array_y_virtual) {
@@ -1133,7 +1122,7 @@ bool clBLASscal(const int n, const float alpha, const void* array_x_virtual, voi
 		}
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDcopy(n, (cl_mem) array_x_logical, 0, 1, (cl_mem) array_y_logical, 0, 1, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDcopy() failed on GPU "<<device.name();
 			return false;
@@ -1147,7 +1136,6 @@ bool clBLASscal(const int n, const float alpha, const void* array_x_virtual, voi
 	return true;
 }
 template bool clBLASscal<float>(const int n, const float alpha, const void* array_x_virtual, void* array_y_virtual);
-template bool clBLASscal<double>(const int n, const float alpha, const void* array_x_virtual, void* array_y_virtual);
 
 template<typename T>
 bool clBLASdot(const int n, const T* x, const int incx, const T* y, const int incy, T* out) {
@@ -1209,7 +1197,7 @@ bool clBLASdot(const int n, const T* x, const int incx, const T* y, const int in
     DLOG(INFO) << "clblasSdot() succeeded on GPU "<<device.name();
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDdot(n, (cl_mem) dot_logical, 0, (cl_mem) x_logical, 0, 1, (cl_mem) y_logical, 0, 1, (cl_mem) buf_logical, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDdot() failed on GPU "<<device.name();
 			clReleaseSubBuffers(sb);
@@ -1225,7 +1213,6 @@ bool clBLASdot(const int n, const T* x, const int incx, const T* y, const int in
 	return true;
 }
 template bool clBLASdot<float>(const int n, const float* x, const int incx, const float* y, const int incy, float* out);
-template bool clBLASdot<double>(const int n, const double* x, const int incx, const double* y, const int incy, double* out);
 
 template<typename T>
 bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T alpha, const T* A, const T* x, const T beta, T* y) {
@@ -1319,7 +1306,7 @@ bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T 
     DLOG(INFO) << "clblasSgemv() succeeded on GPU "<<device.name();
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDgemv(clblasRowMajor, TransA, m, n, alpha, (cl_mem) A_device, A_offset, n, (cl_mem) x_device, x_offset, 1, beta, (cl_mem) y_device, y_offset, 1, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDgemv() failed on GPU "<<device.name();
 			//clReleaseSubBuffers(sb);
@@ -1333,7 +1320,6 @@ bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T 
 	return true;
 }
 template bool clBLASgemv<float>(const clblasTranspose TransA, const int m, const int n, const float alpha, const float* A, const float* x, const float beta, float* y);
-template bool clBLASgemv<double>(const clblasTranspose TransA, const int m, const int n, const double alpha, const double* A, const double* x, const double beta, double* y);
 
 template<typename T>
 bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T alpha, const T* A, const int step_A, const T* x, const int step_x, const T beta, T* y, const int step_y) {
@@ -1368,7 +1354,7 @@ bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T 
     DLOG(INFO) << "clblasSgemv() succeeded on GPU "<<device.name();
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDgemv(clblasRowMajor, TransA, m, n, alpha, (cl_mem) A_logical, step_A, n, (cl_mem) x_logical, step_x, 1, beta, (cl_mem) y_logical, step_y, 1, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDgemv() failed on GPU "<<device.name();
 			return false;
@@ -1379,7 +1365,6 @@ bool clBLASgemv(const clblasTranspose TransA, const int m, const int n, const T 
 	return true;
 }
 template bool clBLASgemv<float>(const clblasTranspose TransA, const int m, const int n, const float alpha, const float* A, const int step_A, const float* x, const int step_x, const float beta, float* y, const int step_y);
-template bool clBLASgemv<double>(const clblasTranspose TransA, const int m, const int n, const double alpha, const double* A, const int step_A, const double* x, const int step_x, const double beta, double* y, const int step_y);
 
 template<typename T>
 bool clgemm(const int m, const int n, const int k, const T alpha, const T* A, const T* B, const T beta, T* C) {
@@ -1470,7 +1455,6 @@ bool clgemm(const int m, const int n, const int k, const T alpha, const T* A, co
 	return true;
 }
 template bool clgemm<float>(const int m, const int n, const int k, const float alpha, const float* A, const float* B, const float beta, float* C);
-template bool clgemm<double>(const int m, const int n, const int k, const double alpga, const double* A, const double* B, const double beta, double* C);
 
 template<typename T>
 bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const T alpha, const T* A, const T* x, const T beta, T* y) {
@@ -1551,7 +1535,7 @@ bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, cons
   }
 
 
-  if( typeid(T) == typeid(double) ) {
+  if( typeid(T) == typeid(float) ) {
     if ( ! CL_CHECK( clblasDgemm(clblasRowMajor, TransA, TransB, m, n, k, alpha, (cl_mem) A_device, A_offset, lda, (cl_mem) x_device, x_offset, ldb, beta, (cl_mem) y_device, y_offset, ldc, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDgemm() failed on GPU "<<device.name();
       return false;
@@ -1562,7 +1546,6 @@ bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, cons
   return true;
 }
 template bool clBLASgemm<float>(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const float alpha, const float* A, const float* x, const float beta, float* y);
-template bool clBLASgemm<double>(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const double alpha, const double* A, const double* x, const double beta, double* y);
 
 template<typename T>
 bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const T alpha, const T* A, const int step_A, const T* x, const int step_x, const T beta, T* y, const int step_y) {
@@ -1608,7 +1591,7 @@ bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, cons
     DLOG(INFO) << "clblasSgemm() succeeded on GPU "<<device.name();
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDgemm(clblasRowMajor, TransA, TransB, m, n, k, alpha, (cl_mem) A_logical, step_A, lda, (cl_mem) x_logical, step_x, ldb, beta, (cl_mem) y_logical, step_y, ldc, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDgemm() failed on GPU "<<device.name();
 			return false;
@@ -1624,8 +1607,6 @@ bool clBLASgemm(const clblasTranspose TransA, const clblasTranspose TransB, cons
 	return true;
 }
 template bool clBLASgemm<float>(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const float alpha, const float* A, const int step_A, const float* x, const int step_x, const float beta, float* y, const int step_y);
-template bool clBLASgemm<double>(const clblasTranspose TransA, const clblasTranspose TransB, const int m, const int n, const int k, const double alpha, const double* A, const int step_A, const double* x, const int step_x, const double beta, double* y, const int step_y);
-
 
 template<typename T>
 bool clBLASaxpy(const int N, const T alpha, const T* X, const int incr_x, T* Y, const int incr_y) {
@@ -1661,7 +1642,7 @@ bool clBLASaxpy(const int N, const T alpha, const T* X, const int incr_x, T* Y, 
     DLOG(INFO) << "clblasSaxpy() succeeded on GPU "<<device.name();
 	}
 
-	if( typeid(T) == typeid(double) ) {
+	if( typeid(T) == typeid(float) ) {
 		if ( ! CL_CHECK( clblasDaxpy(N, alpha, (cl_mem) X_logical, 0, incr_x, (cl_mem) Y_logical, 0, incr_y, 1, queue, 0, NULL, NULL) ) ) {
       LOG(ERROR) << "clblasDaxpy() failed on GPU "<<device.name();
 			clReleaseSubBuffers(sb);
@@ -1676,7 +1657,6 @@ bool clBLASaxpy(const int N, const T alpha, const T* X, const int incr_x, T* Y, 
 	return true;
 }
 template bool clBLASaxpy<float>(const int N, const float alpha, const float* X, const int incr_x, float* Y, const int incr_y);
-template bool clBLASaxpy<double>(const int N, const double alpha, const double* X, const int incr_x, double* Y, const int incr_y);
 
 bool clIsVirtualMemory(const void* p) {
 
@@ -1866,7 +1846,6 @@ bool clsub(const int n, const T* array_GPU_x, const T* array_GPU_y, T* array_GPU
 	return true;
 }
 template bool clsub<float>(const int n, const float* array_GPU_x, const float* array_GPU_y, float* array_GPU_z);
-template bool clsub<double>(const int n, const double* array_GPU_x, const double* array_GPU_y, double* array_GPU_z);
 
 template<typename T>
 bool cladd(const int n, const T* array_GPU_x, const T* array_GPU_y, T* array_GPU_z) {
@@ -1907,7 +1886,6 @@ bool cladd(const int n, const T* array_GPU_x, const T* array_GPU_y, T* array_GPU
 	return true;
 }
 template bool cladd<float>(const int n, const float* array_GPU_x, const float* array_GPU_y, float* array_GPU_z);
-template bool cladd<double>(const int n, const double* array_GPU_x, const double* array_GPU_y, double* array_GPU_z);
 
 template<typename T>
 bool cladd_scalar(const int N, const T alpha, T* Y) {
@@ -1947,7 +1925,6 @@ bool cladd_scalar(const int N, const T alpha, T* Y) {
 	return true;
 }
 template bool cladd_scalar<float>(const int N, const float alpha, float* Y);
-template bool cladd_scalar<double>(const int N, const double alpha, double* Y);
 
 template<typename T>
 bool clpowx(const int n, const T* array_GPU_x, const T alpha, T* array_GPU_z) {
@@ -1988,7 +1965,6 @@ bool clpowx(const int n, const T* array_GPU_x, const T alpha, T* array_GPU_z) {
 	return true;
 }
 template bool clpowx<float>(const int n, const float* array_GPU_x, const float alpha, float* array_GPU_z);
-template bool clpowx<double>(const int n, const double* array_GPU_x, const double alpha, double* array_GPU_z);
 
 template<typename T>
 bool clexp(const int n, const T* array_GPU_x, T* array_GPU_y) {
@@ -2028,14 +2004,13 @@ bool clexp(const int n, const T* array_GPU_x, T* array_GPU_y) {
 	return true;
 }
 template bool clexp<float>(const int n, const float* array_GPU_x, float* array_GPU_z);
-template bool clexp<double>(const int n, const double* array_GPU_x, double* array_GPU_z);
 
 bool cl_caffe_gpu_rng_uniform(const int n, unsigned int* r) {
 
 	size_t bytes;
 
-	bytes = n*sizeof(double);
-	double* fBuffer = (double*) malloc(bytes);
+	bytes = n*sizeof(float);
+	float* fBuffer = (float*) malloc(bytes);
 	if ( fBuffer == NULL ) {
 		LOG(ERROR)<<"failed to allocate cpu memory for buffer of "<<bytes<<" Bytes.";
 		return false;
@@ -2048,7 +2023,7 @@ bool cl_caffe_gpu_rng_uniform(const int n, unsigned int* r) {
 		return false;
 	}
 
-	caffe_rng_uniform(n, (double) 0, (double) UINT_MAX, fBuffer);
+	caffe_rng_uniform(n, (float) 0, (float) UINT_MAX, fBuffer);
 	for ( int i = 0; i < n; i++ ) {
 		buffer[i] = (unsigned int) fBuffer[i];
 	}
@@ -2079,7 +2054,6 @@ bool cl_caffe_gpu_rng_uniform(const int n, const T a, const T b, T* r) {
 	return true;
 }
 template bool cl_caffe_gpu_rng_uniform<float>(const int n, const float a, const float b, float* r);
-template bool cl_caffe_gpu_rng_uniform<double>(const int n, const double a, const double b, double* r);
 
 template<typename T>
 bool cl_caffe_gpu_rng_gaussian(const int n, const T mu, const T sigma, T* r) {
@@ -2099,7 +2073,6 @@ bool cl_caffe_gpu_rng_gaussian(const int n, const T mu, const T sigma, T* r) {
 	return true;
 }
 template bool cl_caffe_gpu_rng_gaussian<float>(const int n, const float mu, const float sigma, float* r);
-template bool cl_caffe_gpu_rng_gaussian<double>(const int n, const double mu, const double sigma, double* r);
 
 template<typename T1, typename T2>
 bool cl_caffe_gpu_rng_bernoulli(const int n, const T1 p, T2* r) {
@@ -2119,9 +2092,7 @@ bool cl_caffe_gpu_rng_bernoulli(const int n, const T1 p, T2* r) {
 	return true;
 }
 template bool cl_caffe_gpu_rng_bernoulli<float, int>(const int n, const float p, int* r);
-template bool cl_caffe_gpu_rng_bernoulli<double, int>(const int n, const double p, int* r);
 template bool cl_caffe_gpu_rng_bernoulli<float, unsigned int>(const int n, const float p, unsigned int* r);
-template bool cl_caffe_gpu_rng_bernoulli<double, unsigned int>(const int n, const double p, unsigned int* r);
 
 } // namespace OpenCL
 

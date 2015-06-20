@@ -224,8 +224,8 @@ void WindowDataLayer<Dtype>::InternalThreadEntry() {
   // windows and N*(1-p) are background (non-object) windows
   CPUTimer batch_timer;
   batch_timer.Start();
-  double read_time = 0;
-  double trans_time = 0;
+  float read_time = 0;
+  float trans_time = 0;
   CPUTimer timer;
   Dtype* top_data = this->prefetch_data_.mutable_cpu_data();
   Dtype* top_label = this->prefetch_label_.mutable_cpu_data();

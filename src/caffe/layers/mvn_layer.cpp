@@ -228,9 +228,6 @@ namespace OpenCL {
     return true;
   };
 	template bool clMVNLayerForwardResidual<float>(const float* bottom_data, const int bottom_data_height, const int bottom_data_width, const float* sum_multiplier, const int sum_multiplier_width, const float* mean, const int mean_width, const float* variance, const int variance_width, const float eps, float* top_data, const int top_data_height, const int top_data_width);
-	template bool clMVNLayerForwardResidual<double>(const double* bottom_data, const int bottom_data_height, const int bottom_data_width, const double* sum_multiplier, const int sum_multiplier_width, const double* mean, const int mean_width, const double* variance, const int variance_width, const double eps, double* top_data, const int top_data_height, const int top_data_width);
-
-
 
 
 template<typename T> bool clMVNLayerForwardMV2(
@@ -283,7 +280,6 @@ template<typename T> bool clMVNLayerForwardMV2(
 	return true;
 };
 template bool clMVNLayerForwardMV2<float>(const float* data2D, const int data2D_height, const int data2D_width, const float* data1D, const int data1D_length, float* linear_term, float* quadratic_term);
-template bool clMVNLayerForwardMV2<double>(const double* data2D, const int data2D_height, const int data2D_width, const double* data1D, const int data1D_length, double* linear_term, double* quadratic_term);
 
 template<typename T> bool clMVNLayerForward(
 		const T* data2D_in, const int data2D_in_height, const int data2D_in_width,
@@ -348,12 +344,6 @@ template bool clMVNLayerForward<float>(
 		const float eps,
 		float* data2D_out
 	    );
-template bool clMVNLayerForward<double>(
-    const double* data2D_in, const int data2D_in_height,
-    const int data2D_in_width, const double* data1D_in,
-    const int data1D_in_length, const double* linear_term,
-    const int linear_term_length, const double* quadratic_term,
-    const int quadratic_term_length, const double eps, double* data2D_out);
 
 template<typename T> bool clMVNLayerForwardS2(
 		const T* data2D_in, const int data2D_in_height, const int data2D_in_width,
@@ -408,11 +398,6 @@ template bool clMVNLayerForwardS2<float>(
 		const float* data2D_in, const int data2D_in_height, const int data2D_in_width,
 		const float* data1D_in, const int data1D_in_length,
 		float* data2D_out
-	    );
-template bool clMVNLayerForwardS2<double>(
-		const double* data2D_in, const int data2D_in_height, const int data2D_in_width,
-		const double* data1D_in, const int data1D_in_length,
-		double* data2D_out
 	    );
 
 
@@ -477,14 +462,6 @@ template bool clMVNLayerBackward<float>(
 		const float eps,
 		float* data2D_out
 	    );
-template bool clMVNLayerBackward<double>(
-		const double* data2D_in, const int data2D_in_height, const int data2D_in_width,
-		const double* data1D_in, const int data1D_in_length,
-		const double* linear_term, const int linear_term_length,
-		const double* quadratic_term, const int quadratic_term_length,
-		const double eps,
-		double* data2D_out
-	    );
 
 template<typename T> bool clMVNLayerBackwardMV2(
     const T* data2D, const T* diff2D, const int data2D_height,
@@ -539,10 +516,6 @@ template bool clMVNLayerBackwardMV2<float>(const float* data2D,
     const float* diff2D, const int data2D_height, const int data2D_width,
     const float* data1D, const int data1D_length, float* linear_term,
     float* quadratic_term);
-template bool clMVNLayerBackwardMV2<double>(const double* data2D,
-    const double* diff2D, const int data2D_height, const int data2D_width,
-    const double* data1D, const int data1D_length, double* linear_term,
-    double* quadratic_term);
 
 template<typename T> bool clMVNLayerBackwardS1(
     const T* data2D_in, const T* diff2D_in, const int data2D_in_height,
@@ -601,20 +574,12 @@ template<typename T> bool clMVNLayerBackwardS1(
 	return true;
 };
 template bool clMVNLayerBackwardS1<float>(
-    const float* data2D_in, const float* diff2D_in, const int data2D_in_height,
-    const int data2D_in_width,
+    const float* data2D_in, const float* diff2D_in,
+    const int data2D_in_height, const int data2D_in_width,
 		const float* data1D_in, const int data1D_in_length,
 		const float* linear_term, const int linear_term_length,
 		const float* quadratic_term, const int quadratic_term_length,
 		float* data2D_out
-	    );
-template bool clMVNLayerBackwardS1<double>(
-    const double* data2D_in, const double* diff2D_in,
-    const int data2D_in_height, const int data2D_in_width,
-		const double* data1D_in, const int data1D_in_length,
-		const double* linear_term, const int linear_term_length,
-		const double* quadratic_term, const int quadratic_term_length,
-		double* data2D_out
 	    );
 
 template<typename T> bool clMVNLayerForward_perf(
@@ -678,18 +643,11 @@ template<typename T> bool clMVNLayerForward_perf(
 };
 template bool clMVNLayerForward_perf<float>(
     const float* A2D_top, const float* A2D_top_diff, const int top_height,
-    const int top_width, const float* A2D_bottom, const float* A2D_bottom_diff,
-    const int bottom_height, const int bottom_width,
-    const float* A1D_sum_multiplier, const float* A1D_buffer,
-    const int sum_multiplier_length, const float eps, float* data2D_out
-	    );
-template bool clMVNLayerForward_perf<double>(
-    const double* A2D_top, const double* A2D_top_diff, const int top_height,
-    const int top_width, const double* A2D_bottom,
-    const double* A2D_bottom_diff, const int bottom_height,
-    const int bottom_width, const double* A1D_sum_multiplier,
-    const double* A1D_buffer, const int sum_multiplier_length,
-    const double eps, double* data2D_out);
+    const int top_width, const float* A2D_bottom,
+    const float* A2D_bottom_diff, const int bottom_height,
+    const int bottom_width, const float* A1D_sum_multiplier,
+    const float* A1D_buffer, const int sum_multiplier_length,
+    const float eps, float* data2D_out);
 
 template<typename T> bool clMVNLayerBackward_perf(
     const T* A2D_top, const T* A2D_top_diff, const int top_height,
@@ -753,13 +711,6 @@ template bool clMVNLayerBackward_perf<float>(
 		const float* A1D_sum_multiplier, const float* A1D_buffer, const int sum_multiplier_length,
 		const float eps,
 		float* data2D_out
-	    );
-template bool clMVNLayerBackward_perf<double>(
-		const double* A2D_top, const double* A2D_top_diff, const int top_height, const int top_width,
-		const double* A2D_bottom, const double* A2D_bottom_diff, const int bottom_height, const int bottom_width,
-		const double* A1D_sum_multiplier, const double* A1D_buffer, const int sum_multiplier_length,
-		const double eps,
-		double* data2D_out
 	    );
 
 

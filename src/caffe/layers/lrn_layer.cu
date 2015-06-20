@@ -98,8 +98,8 @@ void LRNLayer<Dtype>::CrossChannelForward_gpu(
 }
 template void LRNLayer<float>::CrossChannelForward_gpu(
     const vector<Blob<float>*>& bottom, const vector<Blob<float>*>& top);
-template void LRNLayer<double>::CrossChannelForward_gpu(
-    const vector<Blob<double>*>& bottom, const vector<Blob<double>*>& top);
+template void LRNLayer<float>::CrossChannelForward_gpu(
+    const vector<Blob<float>*>& bottom, const vector<Blob<float>*>& top);
 
 
 template <typename Dtype>
@@ -188,9 +188,9 @@ void LRNLayer<Dtype>::CrossChannelBackward_gpu(
 template void LRNLayer<float>::CrossChannelBackward_gpu(
     const vector<Blob<float>*>& top, const vector<bool>& propagate_down,
     const vector<Blob<float>*>& bottom);
-template void LRNLayer<double>::CrossChannelBackward_gpu(
-    const vector<Blob<double>*>& top, const vector<bool>& propagate_down,
-    const vector<Blob<double>*>& bottom);
+template void LRNLayer<float>::CrossChannelBackward_gpu(
+    const vector<Blob<float>*>& top, const vector<bool>& propagate_down,
+    const vector<Blob<float>*>& bottom);
 
 
 

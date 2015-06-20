@@ -87,7 +87,6 @@ bool clBNLLLayerForward(const int count, const T* bottom_data, T* top_data) {
 	return true;
 };
 template bool clBNLLLayerForward<float>(const int count, const float* bottom_data, float* top_data);
-template bool clBNLLLayerForward<double>(const int count, const double* bottom_data, double* top_data);
 
 template<typename T>
 bool clBNLLLayerBackward(const int count, const T* top_diff, const T* bottom_data, T* bottom_diff) {
@@ -131,7 +130,6 @@ bool clBNLLLayerBackward(const int count, const T* top_diff, const T* bottom_dat
 	return true;
 };
 template bool clBNLLLayerBackward<float>(const int count, const float* top_diff, const float* bottom_data, float* bottom_diff);
-template bool clBNLLLayerBackward<double>(const int count, const double* top_diff, const double* bottom_data, double* bottom_diff);
 
 } // namespace OpenCL
 

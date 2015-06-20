@@ -189,11 +189,6 @@ template bool clSoftmaxLossForwardGPU<float>(const int nthreads,
     const int num, const int dim, const int spatial_dim,
     const bool has_ignore_label_, const int ignore_label_,
     float* counts);
-template bool clSoftmaxLossForwardGPU<double>(const int nthreads,
-    const double* prob_data, const double* label, double* loss,
-    const int num, const int dim, const int spatial_dim,
-    const bool has_ignore_label_, const int ignore_label_,
-    double* counts);
 
 template<typename T>
 bool clSoftmaxLossBackwardGPU(const int nthreads, const T* top,
@@ -251,10 +246,6 @@ template bool clSoftmaxLossBackwardGPU<float>(const int nthreads, const float* t
     const float* label, float* bottom_diff, const int num, const int dim,
     const int spatial_dim, const bool has_ignore_label_,
     const int ignore_label_, float* counts);
-template bool clSoftmaxLossBackwardGPU<double>(const int nthreads, const double* top,
-    const double* label, double* bottom_diff, const int num, const int dim,
-    const int spatial_dim, const bool has_ignore_label_,
-    const int ignore_label_, double* counts);
 
 
 } // namespace OpenCL

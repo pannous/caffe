@@ -75,8 +75,6 @@ bool clThresholdForward(const int n, const T threshold, const T* in, T* out) {
 }
 template bool clThresholdForward<float>(const int n, const float threshold,
                                         const float* in, float* out);
-template bool clThresholdForward<double>(const int n, const double threshold,
-                                          const double* in, double* out);
 
 } // namespace OpenCL
 

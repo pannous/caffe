@@ -201,7 +201,6 @@ bool clMaxForward(const int nthreads, const T* bottom_data_a, const T* bottom_da
 	return true;
 };
 template bool clMaxForward<float>(const int nthreads, const float* bottom_data_a, const float* bottom_data_b, const int blob_idx, float* top_data, int* mask);
-template bool clMaxForward<double>(const int nthreads, const double* bottom_data_a, const double* bottom_data_b, const int blob_idx, double* top_data, int* mask);
 
 template<typename T>
 bool clMaxBackward(const int nthreads, const T* top_diff, const int blob_idx, const int* mask, T* bottom_diff) {
@@ -243,7 +242,6 @@ bool clMaxBackward(const int nthreads, const T* top_diff, const int blob_idx, co
 	return true;
 };
 template bool clMaxBackward<float>(const int nthreads, const float* top_diff, const int blob_idx, const int* mask, float* bottom_diff);
-template bool clMaxBackward<double>(const int nthreads, const double* top_diff, const int blob_idx, const int* mask, double* bottom_diff);
 
 } // namespace OpenCL
 

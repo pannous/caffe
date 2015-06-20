@@ -29,10 +29,10 @@ void caffe_gpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
 }
 
 template <>
-void caffe_gpu_gemm<double>(const CBLAS_TRANSPOSE TransA,
+void caffe_gpu_gemm<float>(const CBLAS_TRANSPOSE TransA,
     const CBLAS_TRANSPOSE TransB, const int M, const int N, const int K,
-    const double alpha, const double* A, const double* B, const double beta,
-    double* C) {
+    const float alpha, const float* A, const float* B, const float beta,
+    float* C) {
   // Note that cublas follows fortran order.
   int lda = (TransA == CblasNoTrans) ? K : M;
   int ldb = (TransB == CblasNoTrans) ? N : K;
@@ -55,9 +55,9 @@ void caffe_gpu_gemv<float>(const CBLAS_TRANSPOSE TransA, const int M,
 }
 
 template <>
-void caffe_gpu_gemv<double>(const CBLAS_TRANSPOSE TransA, const int M,
-    const int N, const double alpha, const double* A, const double* x,
-    const double beta, double* y) {
+void caffe_gpu_gemv<float>(const CBLAS_TRANSPOSE TransA, const int M,
+    const int N, const float alpha, const float* A, const float* x,
+    const float beta, float* y) {
   cublasOperation_t cuTransA =
       (TransA == CblasNoTrans) ? CUBLAS_OP_T : CUBLAS_OP_N;
   CUBLAS_CHECK(cublasDgemv(Caffe::cublas_handle(), cuTransA, N, M, &alpha,
@@ -71,8 +71,8 @@ void caffe_gpu_axpy<float>(const int N, const float alpha, const float* X,
 }
 
 template <>
-void caffe_gpu_axpy<double>(const int N, const double alpha, const double* X,
-    double* Y) {
+void caffe_gpu_axpy<float>(const int N, const float alpha, const float* X,
+    float* Y) {
   CUBLAS_CHECK(cublasDaxpy(Caffe::cublas_handle(), N, &alpha, X, 1, Y, 1));
 }
 
@@ -88,7 +88,7 @@ void caffe_gpu_scal<float>(const int N, const float alpha, float *X) {
 }
 
 template <>
-void caffe_gpu_scal<double>(const int N, const double alpha, double *X) {
+void caffe_gpu_scal<float>(const int N, const float alpha, float *X) {
   CUBLAS_CHECK(cublasDscal(Caffe::cublas_handle(), N, &alpha, X, 1));
 }
 
@@ -100,10 +100,10 @@ void caffe_gpu_axpby<float>(const int N, const float alpha, const float* X,
 }
 
 template <>
-void caffe_gpu_axpby<double>(const int N, const double alpha, const double* X,
-    const double beta, double* Y) {
-  caffe_gpu_scal<double>(N, beta, Y);
-  caffe_gpu_axpy<double>(N, alpha, X, Y);
+void caffe_gpu_axpby<float>(const int N, const float alpha, const float* X,
+    const float beta, float* Y) {
+  caffe_gpu_scal<float>(N, beta, Y);
+  caffe_gpu_axpy<float>(N, alpha, X, Y);
 }
 
 template <>
@@ -113,8 +113,8 @@ void caffe_gpu_dot<float>(const int n, const float* x, const float* y,
 }
 
 template <>
-void caffe_gpu_dot<double>(const int n, const double* x, const double* y,
-    double * out) {
+void caffe_gpu_dot<float>(const int n, const float* x, const float* y,
+    float * out) {
   CUBLAS_CHECK(cublasDdot(Caffe::cublas_handle(), n, x, 1, y, 1, out));
 }
 
@@ -124,7 +124,7 @@ void caffe_gpu_asum<float>(const int n, const float* x, float* y) {
 }
 
 template <>
-void caffe_gpu_asum<double>(const int n, const double* x, double* y) {
+void caffe_gpu_asum<float>(const int n, const float* x, float* y) {
   CUBLAS_CHECK(cublasDasum(Caffe::cublas_handle(), n, x, 1, y));
 }
 
@@ -136,8 +136,8 @@ void caffe_gpu_scale<float>(const int n, const float alpha, const float *x,
 }
 
 template <>
-void caffe_gpu_scale<double>(const int n, const double alpha, const double *x,
-                             double* y) {
+void caffe_gpu_scale<float>(const int n, const float alpha, const float *x,
+                             float* y) {
   CUBLAS_CHECK(cublasDcopy(Caffe::cublas_handle(), n, x, 1, y, 1));
   CUBLAS_CHECK(cublasDscal(Caffe::cublas_handle(), n, &alpha, y, 1));
 }
@@ -162,7 +162,7 @@ void caffe_gpu_set(const int N, const Dtype alpha, Dtype* Y) {
 
 template void caffe_gpu_set<int>(const int N, const int alpha, int* Y);
 template void caffe_gpu_set<float>(const int N, const float alpha, float* Y);
-template void caffe_gpu_set<double>(const int N, const double alpha, double* Y);
+template void caffe_gpu_set<float>(const int N, const float alpha, float* Y);
 
 template <typename Dtype>
 __global__ void add_scalar_kernel(const int n, const Dtype alpha, Dtype* y) {
@@ -179,9 +179,9 @@ void caffe_gpu_add_scalar(const int N, const float alpha, float* Y) {
 }
 
 template <>
-void caffe_gpu_add_scalar(const int N, const double alpha, double* Y) {
+void caffe_gpu_add_scalar(const int N, const float alpha, float* Y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  add_scalar_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  add_scalar_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, alpha, Y);
 }
 
@@ -202,10 +202,10 @@ void caffe_gpu_add<float>(const int N, const float* a, const float* b,
 }
 
 template <>
-void caffe_gpu_add<double>(const int N, const double* a, const double* b,
-    double* y) {
+void caffe_gpu_add<float>(const int N, const float* a, const float* b,
+    float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  add_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  add_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, b, y);
 }
 
@@ -226,10 +226,10 @@ void caffe_gpu_sub<float>(const int N, const float* a, const float* b,
 }
 
 template <>
-void caffe_gpu_sub<double>(const int N, const double* a, const double* b,
-    double* y) {
+void caffe_gpu_sub<float>(const int N, const float* a, const float* b,
+    float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  sub_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  sub_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, b, y);
 }
 
@@ -250,10 +250,10 @@ void caffe_gpu_mul<float>(const int N, const float* a,
 }
 
 template <>
-void caffe_gpu_mul<double>(const int N, const double* a,
-    const double* b, double* y) {
+void caffe_gpu_mul<float>(const int N, const float* a,
+    const float* b, float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  mul_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  mul_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, b, y);
 }
 
@@ -274,10 +274,10 @@ void caffe_gpu_div<float>(const int N, const float* a,
 }
 
 template <>
-void caffe_gpu_div<double>(const int N, const double* a,
-    const double* b, double* y) {
+void caffe_gpu_div<float>(const int N, const float* a,
+    const float* b, float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  div_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  div_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, b, y);
 }
 
@@ -296,9 +296,9 @@ void caffe_gpu_abs<float>(const int N, const float* a, float* y) {
 }
 
 template <>
-void caffe_gpu_abs<double>(const int N, const double* a, double* y) {
+void caffe_gpu_abs<float>(const int N, const float* a, float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  abs_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  abs_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, y);
 }
 
@@ -318,9 +318,9 @@ void caffe_gpu_exp<float>(const int N, const float* a, float* y) {
 }
 
 template <>
-void caffe_gpu_exp<double>(const int N, const double* a, double* y) {
+void caffe_gpu_exp<float>(const int N, const float* a, float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  exp_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  exp_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, y);
 }
 
@@ -341,10 +341,10 @@ void caffe_gpu_powx<float>(const int N, const float* a,
 }
 
 template <>
-void caffe_gpu_powx<double>(const int N, const double* a,
-    const double alpha, double* y) {
+void caffe_gpu_powx<float>(const int N, const float* a,
+    const float alpha, float* y) {
   // NOLINT_NEXT_LINE(whitespace/operators)
-  powx_kernel<double><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
+  powx_kernel<float><<<CAFFE_GET_BLOCKS(N), CAFFE_CUDA_NUM_THREADS>>>(
       N, a, alpha, y);
 }
 
@@ -360,8 +360,8 @@ __global__ void popc_kernel(const int n, const float* a,
   }
 }
 
-__global__ void popcll_kernel(const int n, const double* a,
-    const double* b, uint8_t* y) {
+__global__ void popcll_kernel(const int n, const float* a,
+    const float* b, uint8_t* y) {
   CUDA_KERNEL_LOOP(index, n) {
     y[index] = __popcll(static_cast<uint64_t>(a[index]) ^
                       static_cast<uint64_t>(b[index]));
@@ -383,8 +383,8 @@ uint32_t caffe_gpu_hamming_distance<float>(const int n, const float* x,
 }
 
 template <>
-uint32_t caffe_gpu_hamming_distance<double>(const int n, const double* x,
-                                   const double* y) {
+uint32_t caffe_gpu_hamming_distance<float>(const int n, const float* x,
+                                   const float* y) {
   // TODO: Fix caffe_gpu_hamming_distance (see failing unit test
   // TestHammingDistanceGPU in test_math_functions.cpp).
   NOT_IMPLEMENTED;
@@ -415,14 +415,14 @@ void caffe_gpu_rng_uniform<float>(const int n, const float a, const float b,
 }
 
 template <>
-void caffe_gpu_rng_uniform<double>(const int n, const double a, const double b,
-                                   double* r) {
-  CURAND_CHECK(curandGenerateUniformDouble(Caffe::curand_generator(), r, n));
-  const double range = b - a;
-  if (range != static_cast<double>(1)) {
+void caffe_gpu_rng_uniform<float>(const int n, const float a, const float b,
+                                   float* r) {
+  CURAND_CHECK(curandGenerateUniformFloat(Caffe::curand_generator(), r, n));
+  const float range = b - a;
+  if (range != static_cast<float>(1)) {
     caffe_gpu_scal(n, range, r);
   }
-  if (a != static_cast<double>(0)) {
+  if (a != static_cast<float>(0)) {
     caffe_gpu_add_scalar(n, a, r);
   }
 }
@@ -435,10 +435,10 @@ void caffe_gpu_rng_gaussian(const int n, const float mu, const float sigma,
 }
 
 template <>
-void caffe_gpu_rng_gaussian(const int n, const double mu, const double sigma,
-                            double* r) {
+void caffe_gpu_rng_gaussian(const int n, const float mu, const float sigma,
+                            float* r) {
   CURAND_CHECK(
-      curandGenerateNormalDouble(Caffe::curand_generator(), r, n, mu, sigma));
+      curandGenerateNormalFloat(Caffe::curand_generator(), r, n, mu, sigma));
 }
 
 }  // namespace caffe

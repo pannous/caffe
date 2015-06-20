@@ -44,7 +44,7 @@ void DropoutLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
   const int count = bottom[0]->count();
   if (this->phase_ == TRAIN) {
     // Create random numbers
-    caffe_rng_bernoulli(count, 1. - threshold_, mask);
+    caffe_rng_bernoulli(count,(float)( 1. - threshold_), mask);
     for (int i = 0; i < count; ++i) {
       top_data[i] = bottom_data[i] * mask[i] * scale_;
     }
@@ -117,7 +117,6 @@ bool clDropoutLayerForward(const int count, const T* bottom_data, const unsigned
 	return true;
 };
 template bool clDropoutLayerForward<float>(const int count, const float* bottom_data, const unsigned int* mask, const unsigned int threshold, const float scale, float* top_data);
-template bool clDropoutLayerForward<double>(const int count, const double* bottom_data, const unsigned int* mask, const unsigned int threshold, const double scale, double* top_data);
 
 template<typename T>
 bool clDropoutLayerBackward(const int count, const T* top_diff, const unsigned int* mask, const unsigned int threshold, const T scale, T* bottom_diff) {
@@ -160,7 +159,6 @@ bool clDropoutLayerBackward(const int count, const T* top_diff, const unsigned i
 	return true;
 };
 template bool clDropoutLayerBackward<float>(const int count, const float* top_diff, const unsigned int* mask, const unsigned int threshold, const float scale, float* bottom_diff);
-template bool clDropoutLayerBackward<double>(const int count, const double* top_diff, const unsigned int* mask, const unsigned int threshold, const double scale, double* bottom_diff);
 
 } // namespace OpenCL
 
@@ -173,9 +171,9 @@ void DropoutLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom, const 
   const int count = bottom[0]->count();
   if (this->phase_ == TRAIN) {
     unsigned int* mask = static_cast<unsigned int*>(rand_vec_.mutable_gpu_data());
-    caffe_gpu_rng_bernoulli(count, 1. - threshold_, mask);
+    caffe_gpu_rng_bernoulli(count,(float)( 1. - threshold_), mask);
 
-    //caffe_gpu_rng_uniform(count, mask);
+    caffe_gpu_rng_uniform(count, mask);
 
     /*
     // set thresholds

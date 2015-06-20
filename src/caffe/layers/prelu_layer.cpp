@@ -187,9 +187,6 @@ bool clPReLUForward(const int n, const int channels, const int dim,
 template bool clPReLUForward<float>(const int n, const int channels, const int dim,
     const float* in, float* out, const float* slope_data,
     const int div_factor);
-template bool clPReLUForward<double>(const int n, const int channels, const int dim,
-    const double* in, double* out, const double* slope_data,
-    const int div_factor);
 
 template<typename T>
 bool clPReLUBackward(const int n, const int channels, const int dim,
@@ -240,9 +237,6 @@ bool clPReLUBackward(const int n, const int channels, const int dim,
 template bool clPReLUBackward<float>(const int n, const int channels, const int dim,
     const float* in_diff, const float* in_data, float* out_diff,
     const float* slope_data, const int div_factor);
-template bool clPReLUBackward<double>(const int n, const int channels, const int dim,
-    const double* in_diff, const double* in_data, double* out_diff,
-    const double* slope_data, const int div_factor);
 
 template<typename T>
 bool clPReLUParamBackward(const int n, const T* in_diff,
@@ -286,7 +280,6 @@ bool clPReLUParamBackward(const int n, const T* in_diff,
 	return true;
 }
 template bool clPReLUParamBackward<float>(const int n, const float* in_diff, const float* in_data, float* out_diff);
-template bool clPReLUParamBackward<double>(const int n, const double* in_diff, const double* in_data, double* out_diff);
 
 } // namespace OpenCL
 

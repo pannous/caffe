@@ -68,14 +68,14 @@ class CPUTimer : public Timer {
 \
 struct timeval s;\
 \
-double bgn = 0.0;\
+float bgn = 0.0;\
 if (gettimeofday(&s, 0) == 0) {\
   bgn = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 }\
 \
 (this); \
 \
-double end = 0.0;\
+float end = 0.0;\
 if (gettimeofday(&s, 0) == 0) {\
   end = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 }\
@@ -93,12 +93,12 @@ LOG(INFO) << "TIME("<<name<<") = "<<((float) floor(1000*(1000*(end-bgn))))/1000<
 #define	BENCH(result, this)\
 {\
 	struct timeval s;\
-	double bgn = 0.0;\
+	float bgn = 0.0;\
 	if (gettimeofday(&s, 0) == 0) {\
 		bgn = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 	}\
 	(this); \
-	double end = 0.0;\
+	float end = 0.0;\
 	if (gettimeofday(&s, 0) == 0) {\
 		end = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 	}\
@@ -114,13 +114,13 @@ LOG(INFO) << "TIME("<<name<<") = "<<((float) floor(1000*(1000*(end-bgn))))/1000<
 #define	BENCH(result, this)\
 {\
 	struct timeval s;\
-	double bgn = 0.0;\
+	float bgn = 0.0;\
 	if (gettimeofday(&s, 0) == 0) {\
 		bgn = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 	}\
 	(this); \
   caffe::Caffe::DeviceSync(); \
-	double end = 0.0;\
+	float end = 0.0;\
 	if (gettimeofday(&s, 0) == 0) {\
 		end = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
 	}\
@@ -136,13 +136,13 @@ LOG(INFO) << "TIME("<<name<<") = "<<((float) floor(1000*(1000*(end-bgn))))/1000<
 #define BENCH(result, this)\
 {\
   struct timeval s;\
-  double bgn = 0.0;\
+  float bgn = 0.0;\
   if (gettimeofday(&s, 0) == 0) {\
     bgn = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
   }\
   (this); \
   caffe::Caffe::DeviceSync(); \
-  double end = 0.0;\
+  float end = 0.0;\
   if (gettimeofday(&s, 0) == 0) {\
     end = s.tv_sec * 1.0 + s.tv_usec * 1.e-6;\
   }\
@@ -217,8 +217,8 @@ LOG(INFO) << "TIME("<<name<<") = "<<((float) floor(1000*(1000*(end-bgn))))/1000<
     std::cout<<name<<"[" << width << " x " << height << "] = " <<std::endl;\
     int limit_width  = width < SNAP_LENGTH ? width : SNAP_LENGTH;\
     int limit_height = height < SNAP_LENGTH ? height : SNAP_LENGTH;\
-    double delta = 0.0;\
-    double epsilon = 0.01;\
+    float delta = 0.0;\
+    float epsilon = 0.01;\
     for( int i = 0; i < limit_height; i++ ) {\
       for( int j = 0; j < limit_width; j++ ) {\
         delta = (array1)[i*width+j] - (array2)[i*width+j];\

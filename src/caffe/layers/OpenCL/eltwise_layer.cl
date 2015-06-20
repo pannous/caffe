@@ -1,17 +1,5 @@
-#if defined(cl_khr_fp64)
-#pragma OPENCL EXTENSION cl_khr_fp64 : enable
-#endif
-		
-#if defined(cl_amd_printf)
-#pragma OPENCL EXTENSION cl_amd_printf : enable
-#endif
 
-#if defined(cl_amd_fp64)
-#pragma OPENCL EXTENSION cl_amd_fp64 : enable
-#endif
-
-
-template <class T> __kernel void MaxForward(const int nthreads, const global T* bottom_data_a, const global T* bottom_data_b, const int blob_idx, global T* top_data, global int* mask) {
+template <class T> __kernel void MaxForward(const int nthreads, const global float* bottom_data_a, const global float* bottom_data_b, const int blob_idx, global float* top_data, global int* mask) {
 
 	int idx = get_global_id(0);
 	if ( idx < nthreads ) {
@@ -35,9 +23,8 @@ template <class T> __kernel void MaxForward(const int nthreads, const global T* 
 	}
 }
 template __attribute__((mangled_name(MaxForwardFloat))) kernel void MaxForward(const int nthreads, const global float* bottom_data_a, const global float* bottom_data_b, const int blob_idx, global float* top_data, global int* mask);
-template __attribute__((mangled_name(MaxForwardDouble))) kernel void MaxForward(const int nthreads, const global double* bottom_data_a, const global double* bottom_data_b, const int blob_idx, global double* top_data, global int* mask);
 
-template <class T> __kernel void MaxBackward(const int nthreads, const global T* top_diff, const int blob_idx, const global int* mask, global T* bottom_diff) {
+template <class T> __kernel void MaxBackward(const int nthreads, const global float* top_diff, const int blob_idx, const global int* mask, global float* bottom_diff) {
 
 	int idx = get_global_id(0);
 	if ( idx < nthreads ) {
@@ -49,4 +36,3 @@ template <class T> __kernel void MaxBackward(const int nthreads, const global T*
 	}
 }
 template __attribute__((mangled_name(MaxBackwardFloat))) kernel void MaxBackward(const int nthreads, const global float* top_diff, const int blob_idx, const global int* mask, global float* bottom_diff);
-template __attribute__((mangled_name(MaxBackwardDouble))) kernel void MaxBackward(const int nthreads, const global double* top_diff, const int blob_idx, const global int* mask, global double* bottom_diff);

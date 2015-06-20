@@ -388,7 +388,6 @@ bool clMaxPoolBackward(
 	return true;
 }
 template bool clMaxPoolBackward<float>(const int nthreads, const float* top_diff, const int* mask, const float* top_mask, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, float* bottom_diff);
-template bool clMaxPoolBackward<double>(const int nthreads, const double* top_diff, const int* mask, const double* top_mask, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, double* bottom_diff);
 
 template<typename T>
 bool clAvePoolBackward(
@@ -455,7 +454,6 @@ bool clAvePoolBackward(
 	return true;
 }
 template bool clAvePoolBackward<float>(const int nthreads, const float* top_diff, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, float* bottom_diff);
-template bool clAvePoolBackward<double>(const int nthreads, const double* top_diff, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, double* bottom_diff);
 
 template<typename T>
 bool clStoPoolBackward(
@@ -520,7 +518,6 @@ bool clStoPoolBackward(
 	return true;
 }
 template bool clStoPoolBackward<float>(const int nthreads, const float* rand_idx, const float* top_diff, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, float* bottom_diff);
-template bool clStoPoolBackward<double>(const int nthreads, const double* rand_idx, const double* top_diff, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, double* bottom_diff);
 
 template<typename T>
 bool clMaxPoolForward(
@@ -631,25 +628,6 @@ template bool clMaxPoolForward<float>(
 		int* mask,
 		float* top_mask
 		);
-template bool clMaxPoolForward<double>(
-		const int nthreads,
-		const double* bottom_data,
-		const int num,
-		const int channels,
-		const int height,
-		const int width,
-		const int pooled_height,
-		const int pooled_width,
-		const int kernel_h,
-		const int kernel_w,
-		const int stride_h,
-		const int stride_w,
-		const int pad_h,
-		const int pad_w,
-		double* top_data,
-		int* mask,
-		double* top_mask
-		);
 
 template<typename T>
 bool clAvePoolForward(
@@ -735,7 +713,7 @@ bool clAvePoolForward(
 	return true;
 }
 template bool clAvePoolForward<float>(const int nthreads, const float* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, float* top_data);
-template bool clAvePoolForward<double>(const int nthreads, const double* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, const int pad_h, const int pad_w, double* top_data);
+
 
 template<typename T>
 bool clStoPoolForwardTrain(
@@ -800,7 +778,6 @@ bool clStoPoolForwardTrain(
 	return true;
 }
 template bool clStoPoolForwardTrain<float>(const int nthreads, const float* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, float* rand_idx, float* top_data);
-template bool clStoPoolForwardTrain<double>(const int nthreads, const double* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, double* rand_idx, double* top_data);
 
 template<typename T>
 bool clStoPoolForwardTest(
@@ -863,7 +840,7 @@ bool clStoPoolForwardTest(
 	return true;
 }
 template bool clStoPoolForwardTest<float>(const int nthreads, const float* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, float* top_data);
-template bool clStoPoolForwardTest<double>(const int nthreads, const double* bottom_data, const int num, const int channels, const int height, const int width, const int pooled_height, const int pooled_width, const int kernel_h, const int kernel_w, const int stride_h, const int stride_w, double* top_data);
+
 } // namespace OpenCL
 
 template<typename Dtype>

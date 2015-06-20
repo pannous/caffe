@@ -83,7 +83,6 @@ bool clSigmoidLayerForward(const int count, const T* bottom_data, T* top_data) {
 	return true;
 };
 template bool clSigmoidLayerForward<float>(const int count, const float* bottom_data, float* top_data);
-template bool clSigmoidLayerForward<double>(const int count, const double* bottom_data, double* top_data);
 
 template<typename T>
 bool clSigmoidLayerBackward(const int count, const T* top_diff, const T* top_data, T* bottom_diff) {
@@ -124,7 +123,6 @@ bool clSigmoidLayerBackward(const int count, const T* top_diff, const T* top_dat
 	return true;
 };
 template bool clSigmoidLayerBackward<float>(const int count, const float* top_diff, const float* top_data, float* bottom_diff);
-template bool clSigmoidLayerBackward<double>(const int count, const double* top_diff, const double* top_data, double* bottom_diff);
 
 
 } // namespace OpenCL

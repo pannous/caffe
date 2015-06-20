@@ -1,7 +1,12 @@
 #ifndef __OPENCL_MANAGER_HPP__
 #define __OPENCL_MANAGER_HPP__
 
-#include <CL/cl.hpp>
+// #ifdef __APPLE__
+   // #include <OpenCL/opencl.hpp>
+// #else
+//    #include <CL/cl.hpp>
+// #endif
+
 #include <vector>
 #include <caffe/util/OpenCL/OpenCLPlatform.hpp>
 

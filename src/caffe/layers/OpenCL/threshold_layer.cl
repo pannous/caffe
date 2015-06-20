@@ -1,3 +1,4 @@
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
 #if defined(cl_khr_fp64)
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 #endif
@@ -19,5 +20,5 @@ template <class T> __kernel void ThresholdForward(const int n, const T threshold
 	}
 }
 template __attribute__((mangled_name(ThresholdForwardFloat))) kernel void ThresholdForward(const int n, const float threshold, const global float* in, global float* out);
-template __attribute__((mangled_name(ThresholdForwardDouble))) kernel void ThresholdForward(const int n, const double threshold, const global double* in, global double* out);
+template __attribute__((mangled_name(ThresholdForwardDouble))) kernel void ThresholdForward(const int n, const float threshold, const global float* in, global float* out);
 

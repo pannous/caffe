@@ -83,7 +83,6 @@ bool clTanHLayerForward(const int count, const T* bottom_data, T* top_data) {
 	return true;
 };
 template bool clTanHLayerForward<float>(const int count, const float* bottom_data, float* top_data);
-template bool clTanHLayerForward<double>(const int count, const double* bottom_data, double* top_data);
 
 template<typename T>
 bool clTanHLayerBackward(const int count, const T* top_diff, const T* top_data, T* bottom_diff) {
@@ -124,7 +123,6 @@ bool clTanHLayerBackward(const int count, const T* top_diff, const T* top_data, 
 	return true;
 };
 template bool clTanHLayerBackward<float>(const int count, const float* top_diff, const float* top_data, float* bottom_diff);
-template bool clTanHLayerBackward<double>(const int count, const double* top_diff, const double* top_data, double* bottom_diff);
 
 } // namespace OpenCL
 

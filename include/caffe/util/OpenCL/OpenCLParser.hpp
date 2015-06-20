@@ -28,7 +28,7 @@ protected:
 	std::string getTypedKernelName(std::string line);
 	std::string getTypedKernelLine(std::string line);
 	bool isFloatType(std::string name);
-	bool isDoubleType(std::string name);
+	// bool isDoubleType(std::string name);
 
 private:
 };

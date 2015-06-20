@@ -84,7 +84,6 @@ bool clReLULayerForward(const int count, const T* bottom_data, T* top_data, T ne
 	return true;
 };
 template bool clReLULayerForward<float>(const int count, const float* bottom_data, float* top_data, float negative_slope);
-template bool clReLULayerForward<double>(const int count, const double* bottom_data, double* top_data, double negative_slope);
 
 template<typename T>
 bool clReLULayerBackward(const int count, const T* top_diff, const T* bottom_data, T* bottom_diff, T negative_slope) {
@@ -126,7 +125,6 @@ bool clReLULayerBackward(const int count, const T* top_diff, const T* bottom_dat
 	return true;
 };
 template bool clReLULayerBackward<float>(const int count, const float* top_diff, const float* bottom_data, float* bottom_diff, float negative_slope);
-template bool clReLULayerBackward<double>(const int count, const double* top_diff, const double* bottom_data, double* bottom_diff, double negative_slope);
 
 
 } // namespace OpenCL

@@ -51,11 +51,6 @@ template<> class dataType<float>  {
  public:
   static const cudnnDataType_t type = CUDNN_DATA_FLOAT;
 };
-template<> class dataType<double> {
- public:
-  static const cudnnDataType_t type = CUDNN_DATA_DOUBLE;
-};
-
 template <typename Dtype>
 inline void createTensor4dDesc(cudnnTensor4dDescriptor_t* desc) {
   CUDNN_CHECK(cudnnCreateTensor4dDescriptor(desc));

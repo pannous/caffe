@@ -1,3 +1,4 @@
+#pragma OPENCL EXTENSION cl_khr_fp64 : enable
 #if defined(cl_khr_fp64)
 #pragma OPENCL EXTENSION cl_khr_fp64 : enable
 #endif
@@ -22,31 +23,31 @@ template <class T> __kernel void clsign(const int n, global T* x, global T* y) {
 
 	int idx = get_global_id(0);
 	if ( idx < n ) {
-		y[idx] = sign(x[idx]);
+		y[idx] = sign((float)x[idx]);
 	}
 }
 template __attribute__((mangled_name(clsignFloat))) kernel void clsign(const int n, global float* x, global float* y); 
-template __attribute__((mangled_name(clsignDouble))) kernel void clsign(const int n, global double* x, global double* y);
+template __attribute__((mangled_name(clsignDouble))) kernel void clsign(const int n, global float* x, global float* y);
 
 template <class T> __kernel void clsgnbit(const int n, global T* x, global T* y) {
 
 	int idx = get_global_id(0);
 	if ( idx < n ) {
-		y[idx] = signbit(x[idx]);
+		y[idx] = signbit((float)x[idx]);
 	}
 }
 template __attribute__((mangled_name(clsgnbitFloat))) kernel void clsgnbit(const int n, global float* x, global float* y); 
-template __attribute__((mangled_name(clsgnbitDouble))) kernel void clsgnbit(const int n, global double* x, global double* y);
+template __attribute__((mangled_name(clsgnbitDouble))) kernel void clsgnbit(const int n, global float* x, global float* y);
 
 template <class T> __kernel void clabs(const int n, global T* x, global T* y) {
 
 	int idx = get_global_id(0);
 	if ( idx < n ) {
-		y[idx] = fabs(x[idx]);
+		y[idx] = fabs((float)x[idx]);
 	}
 }
 template __attribute__((mangled_name(clabsFloat))) kernel void clabs(const int n, global float* x, global float* y); 
-template __attribute__((mangled_name(clabsDouble))) kernel void clabs(const int n, global double* x, global double* y);
+template __attribute__((mangled_name(clabsDouble))) kernel void clabs(const int n, global float* x, global float* y);
 
 template <class T> __kernel void cldiv(const int n, global T* x, global T* y, global T* z) {
 
@@ -56,7 +57,7 @@ template <class T> __kernel void cldiv(const int n, global T* x, global T* y, gl
 	}
 }
 template __attribute__((mangled_name(cldivFloat))) kernel void cldiv(const int n, global float* x, global float* y, global float* z); 
-template __attribute__((mangled_name(cldivDouble))) kernel void cldiv(const int n, global double* x, global double* y, global double* z);
+template __attribute__((mangled_name(cldivDouble))) kernel void cldiv(const int n, global float* x, global float* y, global float* z);
 
 template <class T> __kernel void clmul(const int n, global T* x, global T* y, global T* z) {
 
@@ -66,7 +67,7 @@ template <class T> __kernel void clmul(const int n, global T* x, global T* y, gl
 	}
 }
 template __attribute__((mangled_name(clmulFloat))) kernel void clmul(const int n, global float* x, global float* y, global float* z); 
-template __attribute__((mangled_name(clmulDouble))) kernel void clmul(const int n, global double* x, global double* y, global double* z);
+template __attribute__((mangled_name(clmulDouble))) kernel void clmul(const int n, global float* x, global float* y, global float* z);
 
 template <class T> __kernel void clFillBuffer(const int n, const T alpha, global T* x) {
 
@@ -78,7 +79,7 @@ template <class T> __kernel void clFillBuffer(const int n, const T alpha, global
 template __attribute__((mangled_name(clFillBufferChar))) kernel void clFillBuffer(const int n, const char alpha, global char* x);
 template __attribute__((mangled_name(clFillBufferInt))) kernel void clFillBuffer(const int n, const int alpha, global int* x);
 template __attribute__((mangled_name(clFillBufferFloat))) kernel void clFillBuffer(const int n, const float alpha, global float* x); 
-template __attribute__((mangled_name(clFillBufferDouble))) kernel void clFillBuffer(const int n, const double alpha, global double* x);
+template __attribute__((mangled_name(clFillBufferDouble))) kernel void clFillBuffer(const int n, const float alpha, global float* x);
 
 template <class T> __kernel void clGPU2GPU(const int n, global T* x, const int offset_x, global T* y, const int offset_y) {
 
@@ -91,7 +92,7 @@ template <class T> __kernel void clGPU2GPU(const int n, global T* x, const int o
 template __attribute__((mangled_name(clGPU2GPUChar))) kernel void clGPU2GPU(const int n, global char* x, const int offset_x, global char* y, const int offset_y);
 template __attribute__((mangled_name(clGPU2GPUInt))) kernel void clGPU2GPU(const int n, global int* x, const int offset_x, global int* y, const int offset_y);
 template __attribute__((mangled_name(clGPU2GPUFloat))) kernel void clGPU2GPU(const int n, global float* x, const int offset_x, global float* y, const int offset_y); 
-template __attribute__((mangled_name(clGPU2GPUDouble))) kernel void clGPU2GPU(const int n, global double* x, const int offset_x, global double* y, const int offset_y);
+template __attribute__((mangled_name(clGPU2GPUDouble))) kernel void clGPU2GPU(const int n, global float* x, const int offset_x, global float* y, const int offset_y);
 
 template <class T> __kernel void clsub(const int n, global T* x, global T* y, global T* z) {
 
@@ -101,7 +102,7 @@ template <class T> __kernel void clsub(const int n, global T* x, global T* y, gl
 	}
 }
 template __attribute__((mangled_name(clsubFloat))) kernel void clsub(const int n, global float* x, global float* y, global float* z); 
-template __attribute__((mangled_name(clsubDouble))) kernel void clsub(const int n, global double* x, global double* y, global double* z);
+template __attribute__((mangled_name(clsubDouble))) kernel void clsub(const int n, global float* x, global float* y, global float* z);
 
 template <class T> __kernel void cladd(const int n, global T* x, global T* y, global T* z) {
 
@@ -111,7 +112,7 @@ template <class T> __kernel void cladd(const int n, global T* x, global T* y, gl
 	}
 }
 template __attribute__((mangled_name(claddFloat))) kernel void cladd(const int n, global float* x, global float* y, global float* z); 
-template __attribute__((mangled_name(claddDouble))) kernel void cladd(const int n, global double* x, global double* y, global double* z);
+template __attribute__((mangled_name(claddDouble))) kernel void cladd(const int n, global float* x, global float* y, global float* z);
 
 template <class T> __kernel void cladd_scalar(const int N, const T alpha, global T* Y) {
 
@@ -121,17 +122,17 @@ template <class T> __kernel void cladd_scalar(const int N, const T alpha, global
 	}
 }
 template __attribute__((mangled_name(cladd_scalarFloat))) kernel void cladd_scalar(const int N, const float alpha, global float* Y); 
-template __attribute__((mangled_name(cladd_scalarDouble))) kernel void cladd_scalar(const int N, const double alpha, global double* Y);
+template __attribute__((mangled_name(cladd_scalarDouble))) kernel void cladd_scalar(const int N, const float alpha, global float* Y);
 
 template <class T> __kernel void clpowx(const int n, global T* x, const T alpha, global T* z) {
 
 	int idx = get_global_id(0);
 	if ( idx < n ) {
-		// z[idx] = pow((x[idx],alpha); original
+		// z[idx] = pow(((float)x[idx],alpha); original
 		//z[idx] = pow((float), (float) alpha); // NV fix
 
 		if ( alpha == 2.0 ) {
-			z[idx] = pow((float) fabs(x[idx]), (float) alpha); // MVN fix, ContrastiveLossLayerTest, AdaGradSolverTest
+			z[idx] = pow((float) fabs((float)x[idx]), (float) alpha); // MVN fix, ContrastiveLossLayerTest, AdaGradSolverTest
 		} else {
 			z[idx] = pow((float) x[idx], (float) alpha); // MVN fix, ContrastiveLossLayerTest, AdaGradSolverTest
 		}
@@ -139,17 +140,17 @@ template <class T> __kernel void clpowx(const int n, global T* x, const T alpha,
 	}
 }
 template __attribute__((mangled_name(clpowxFloat))) kernel void clpowx(const int n, global float* x, float alpha, global float* z); 
-template __attribute__((mangled_name(clpowxDouble))) kernel void clpowx(const int n, global double* x, double alpha, global double* z);
+template __attribute__((mangled_name(clpowxDouble))) kernel void clpowx(const int n, global float* x, float alpha, global float* z);
 
 template <class T> __kernel void clexp(const int n, global T* x, global T* y) {
 
 	int idx = get_global_id(0);
 	if ( idx < n ) {
-		y[idx] = exp(x[idx]);
+		y[idx] = exp((float)x[idx]);
 	}
 }
 template __attribute__((mangled_name(clexpFloat))) kernel void clexp(const int n, global float* x, global float* y); 
-template __attribute__((mangled_name(clexpDouble))) kernel void clexp(const int n, global double* x, global double* y);
+template __attribute__((mangled_name(clexpDouble))) kernel void clexp(const int n, global float* x, global float* y);
 
 /* Source: OpenCL Programming Guide by authors Munshi, Gaster, Mattson, Fung, Ginsburg
  * Ch 21 Matrix Multiplication with OpenCL
@@ -213,7 +214,7 @@ template <class T> __kernel void mmul(const int M, const int N, const int K, con
   
 }
 template __attribute__((mangled_name(mmulFloat))) kernel void mmul(const int M, const int N, const int K, const float alpha, global float* A, global float* B, const float beta, global float* C,  local float* rowBufferA,  local float* colBufferA);
-template __attribute__((mangled_name(mmulDouble))) kernel void mmul(const int M, const int N, const int K, const double alpha, global double* A, global double* B, const double beta, global double* C,  local double* rowBufferA,  local double* colBufferA);
+template __attribute__((mangled_name(mmulDouble))) kernel void mmul(const int M, const int N, const int K, const float alpha, global float* A, global float* B, const float beta, global float* C,  local float* rowBufferA,  local float* colBufferA);
 
 
 template <class T> __kernel void mmul2(const int M, const int N, const int K, const T alpha, global T* A, global T* B, const T beta, global T* C, local T* rowBufferA, local T* colBufferA ) {
@@ -316,4 +317,4 @@ template <class T> __kernel void mmul2(const int M, const int N, const int K, co
       }
 }
 template __attribute__((mangled_name(mmul2Float))) kernel void mmul2(const int M, const int N, const int K, const float alpha, global float* A, global float* B, const float beta, global float* C,  local float* rowBufferA,  local float* colBufferA);
-template __attribute__((mangled_name(mmul2Double))) kernel void mmul2(const int M, const int N, const int K, const double alpha, global double* A, global double* B, const double beta, global double* C,  local double* rowBufferA,  local double* colBufferA);
+template __attribute__((mangled_name(mmul2Double))) kernel void mmul2(const int M, const int N, const int K, const float alpha, global float* A, global float* B, const float beta, global float* C,  local float* rowBufferA,  local float* colBufferA);

@@ -69,7 +69,6 @@ bool OpenCLParser::getKernelNames(std::string fileName, std::vector<std::string>
     			it++;
     			it++;
     			names.push_back(*it+"Float");
-    			names.push_back(*it+"Double");
     		}
     	}
     }
@@ -168,11 +167,6 @@ bool OpenCLParser::isFloatType(std::string name) {
 	return this->match(name, re);
 }
 
-bool OpenCLParser::isDoubleType(std::string name) {
-
-	boost::regex re(".*Double", boost::regex::perl);
-	return this->match(name, re);
-}
 
 bool OpenCLParser::convert(std::string fileNameIN, std::string fileNameOUT) {
 
@@ -239,10 +233,6 @@ bool OpenCLParser::convert(std::string fileNameIN, std::string fileNameOUT) {
         	if ( isFloatType(kernel_name_typed) ) {
         		type_replace = "float";
         	}
-        	if ( isDoubleType(kernel_name_typed) ) {
-        		type_replace = "double";
-        	}
-
         	kernel_modified = kernel_line_typed + "\n" + kernel_buffer;
 
        		boost::regex re;

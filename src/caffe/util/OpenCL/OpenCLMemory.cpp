@@ -39,7 +39,7 @@ OpenCLMemory::OpenCLMemory(size_t size) {
     LOG(FATAL) << oss;
 	}
 
-	double allocSizeMB = size / (1024.0*1024.0);
+	float allocSizeMB = size / (1024.0*1024.0);
 
 	cl_int err;
   this->ptr_device_mem_ = clCreateBuffer(context, CL_MEM_READ_WRITE, size, NULL, &err);
@@ -50,7 +50,7 @@ OpenCLMemory::OpenCLMemory(size_t size) {
     //throw OpenCLMemoryException(oss.str());
 	}
   size_t bytesUsed = current_device.getMemoryUsage();
-	double deviceMemUsedMB = bytesUsed;
+	float deviceMemUsedMB = bytesUsed;
 	deviceMemUsedMB /= 1024.0;
 	deviceMemUsedMB /= 1024.0;
 

@@ -1,7 +1,7 @@
 #ifndef __OPENCL_PLATFORM_HPP__
 #define __OPENCL_PLATFORM_HPP__
 
-#include <CL/cl.hpp>
+// #include <CL/cl.hpp>
 #include <vector>
 #include <caffe/util/OpenCL/OpenCLDevice.hpp>
 

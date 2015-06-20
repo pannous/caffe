@@ -14,7 +14,7 @@
 
 namespace caffe {
 
-double tanh_naive(double x) {
+float tanh_naive(float x) {
   if (x < -40) {
     // avoid negative overflow
     return -1;
@@ -23,7 +23,7 @@ double tanh_naive(double x) {
     return 1;
   } else {
     // exact expression for tanh, which is unstable for large x
-    double exp2x = exp(2 * x);
+    float exp2x = exp(2 * x);
     return (exp2x - 1.0) / (exp2x + 1.0);
   }
 }

@@ -98,8 +98,8 @@ template <typename Dtype>
 void ImageDataLayer<Dtype>::InternalThreadEntry() {
   CPUTimer batch_timer;
   batch_timer.Start();
-  double read_time = 0;
-  double trans_time = 0;
+  float read_time = 0;
+  float trans_time = 0;
   CPUTimer timer;
   CHECK(this->prefetch_data_.count());
   CHECK(this->transformed_data_.count());

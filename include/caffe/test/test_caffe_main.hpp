@@ -43,20 +43,16 @@ class MultiDeviceTest : public ::testing::Test {
   virtual ~MultiDeviceTest() {}
 };
 
-typedef ::testing::Types<float, double> TestDtypes;
+typedef ::testing::Types<float, float> TestDtypes;
 
 struct FloatCPU {
   typedef float Dtype;
   static const Caffe::Brew device = Caffe::CPU;
 };
 
-struct DoubleCPU {
-  typedef double Dtype;
-  static const Caffe::Brew device = Caffe::CPU;
-};
 
 #if defined(CPU_ONLY) && ! defined(USE_OPENCL)
-typedef ::testing::Types<FloatCPU, DoubleCPU> TestDtypesAndDevices;
+typedef ::testing::Types<FloatCPU> TestDtypesAndDevices;
 #else
 
 struct FloatGPU {
@@ -64,12 +60,7 @@ struct FloatGPU {
   static const Caffe::Brew device = Caffe::GPU;
 };
 
-struct DoubleGPU {
-  typedef double Dtype;
-  static const Caffe::Brew device = Caffe::GPU;
-};
-
-typedef ::testing::Types<FloatCPU, DoubleCPU, FloatGPU, DoubleGPU>
+typedef ::testing::Types<FloatCPU, FloatGPU>
     TestDtypesAndDevices;
 
 #endif

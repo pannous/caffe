@@ -138,7 +138,6 @@ bool clkernel_channel_max(const int num, const int channels, const int spatial_d
 	return true;
 }
 template bool clkernel_channel_max<float>(const int num, const int channels, const int spatial_dim, const float* data, float* out);
-template bool clkernel_channel_max<double>(const int num, const int channels, const int spatial_dim, const double* data, double* out);
 
 template<typename T>
 bool clkernel_channel_subtract(const int num, const int channels, const int spatial_dim,
@@ -182,7 +181,6 @@ bool clkernel_channel_subtract(const int num, const int channels, const int spat
 	return true;
 }
 template bool clkernel_channel_subtract<float>(const int num, const int channels, const int spatial_dim, float* data, const float* channel_max);
-template bool clkernel_channel_subtract<double>(const int num, const int channels, const int spatial_dim, double* data, const double* channel_max);
 
 template<typename T>
 bool clkernel_exp(const int count, const T* data, T* out) {
@@ -226,7 +224,6 @@ bool clkernel_exp(const int count, const T* data, T* out) {
 	return true;
 }
 template bool clkernel_exp<float>(const int count, const float* data, float* out);
-template bool clkernel_exp<double>(const int count, const double* data, double* out);
 
 template<typename T>
 bool clkernel_channel_sum(const int num, const int channels, const int spatial_dim, const T* data, T* channel_sum) {
@@ -275,10 +272,6 @@ template bool clkernel_channel_sum<float>(
                         const int num, const int channels,
                         const int spatial_dim, const float* data,
                         float* channel_sum);
-template bool clkernel_channel_sum<double>(
-                        const int num, const int channels,
-                        const int spatial_dim, const double* data,
-                        double* channel_sum);
 
 template<typename T>
 bool clkernel_channel_div(const int num, const int channels,
@@ -330,9 +323,6 @@ bool clkernel_channel_div(const int num, const int channels,
 template bool clkernel_channel_div<float>(const int num,
               const int channels, const int spatial_dim,
               float* data, const float* channel_sum);
-template bool clkernel_channel_div<double>(const int num,
-              const int channels, const int spatial_dim,
-              double* data, const double* channel_sum);
 
 template<typename T>
 bool clkernel_channel_dot(const int num, const int channels,
@@ -384,15 +374,10 @@ bool clkernel_channel_dot(const int num, const int channels,
 	return true;
 }
 template bool clkernel_channel_dot<float>(const int num, const int channels,
-                                          const int spatial_dim,
-                                          const float* data_1,
-                                          const float* data_2,
-                                          float* channel_dot);
-template bool clkernel_channel_dot<double>(const int num, const int channels,
                                            const int spatial_dim,
-                                           const double* data_1,
-                                           const double* data_2,
-                                           double* channel_dot);
+                                           const float* data_1,
+                                           const float* data_2,
+                                           float* channel_dot);
 } // namespace OpenCL
 
 
