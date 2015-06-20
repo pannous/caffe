@@ -65,10 +65,10 @@ template void im2col_gpu<float>(const float* data_im, const int channels,
     const int height, const int width, const int kernel_h, const int kernel_w,
     const int pad_h, const int pad_w, const int stride_h, const int stride_w,
     float* data_col);
-template void im2col_gpu<double>(const double* data_im, const int channels,
+template void im2col_gpu<float>(const float* data_im, const int channels,
     const int height, const int width, const int kernel_h, const int kernel_w,
     const int pad_h, const int pad_w, const int stride_h, const int stride_w,
-    double* data_col);
+    float* data_col);
 
 template <typename Dtype>
 __global__ void col2im_gpu_kernel(const int n, const Dtype* data_col,
@@ -136,9 +136,9 @@ template void col2im_gpu<float>(const float* data_col, const int channels,
     const int height, const int width, const int patch_h, const int patch_w,
     const int pad_h, const int pad_w, const int stride_h,
     const int stride_w, float* data_im);
-template void col2im_gpu<double>(const double* data_col, const int channels,
+template void col2im_gpu<float>(const float* data_col, const int channels,
     const int height, const int width, const int patch_h, const int patch_w,
     const int pad_h, const int pad_w, const int stride_h,
-    const int stride_w, double* data_im);
+    const int stride_w, float* data_im);
 
 }  // namespace caffe

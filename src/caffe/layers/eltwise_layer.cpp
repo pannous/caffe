@@ -5,6 +5,11 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/vision_layers.hpp"
 
+#if defined(USE_OPENCL)
+#include <caffe/util/OpenCL/OpenCLDevice.hpp>
+#include <caffe/util/OpenCL/eltwise_layer.hpp>
+#endif
+
 namespace caffe {
 
 template <typename Dtype>
@@ -151,7 +156,196 @@ void EltwiseLayer<Dtype>::Backward_cpu(const vector<Blob<Dtype>*>& top,
   }
 }
 
-#ifdef CPU_ONLY
+#if defined(USE_OPENCL)
+
+namespace OpenCL {
+
+template<typename T>
+bool clMaxForward(const int nthreads, const T* bottom_data_a, const T* bottom_data_b, const int blob_idx, T* top_data, int* mask) {
+  OpenCLDevice& device = OpenCLManager::CurrentPlatform().CurrentDevice();
+
+	std::string kernel_name = clGetKernelName<T>("MaxForward");
+
+  cl_command_queue* queue = device.getQueue();
+	if ( ! queue ) {
+    LOG(ERROR) << device.name() << "> failed to get OpenCL command queue";
+		return false;
+	}
+
+  cl_kernel* kernel = device.getKernel(kernel_name);
+	if ( kernel == NULL ) {
+		return false;
+	}
+
+	CL_SET_KERNEL_ARG
+  CL_SET_TYPE_KERNEL_ARG(int, nthreads, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&bottom_data_a, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&bottom_data_b, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, blob_idx, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&top_data, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&mask, kernel)
+
+	size_t global = CAFFE_GET_GLOBAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+	size_t local  = CAFFE_GET_LOCAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+
+	err = clEnqueueNDRangeKernel(*queue, *kernel, 1, NULL, &global, &local, 0, NULL, NULL);
+	if ( err != CL_SUCCESS ) {
+    LOG(ERROR) << "Failed to enqueue kernel '"<<kernel_name.c_str()<<"' on GPU "<<device.name()<<" : "<<caffe::OpenCL::what(err);
+		return false;
+	}
+	//clFinish(*queue);
+  DLOG(INFO) << "kernel '"<<kernel_name.c_str()<<"' executed on GPU "<<device.name();
+
+	CL_SET_KERNEL_ARG_END
+
+	return true;
+};
+template bool clMaxForward<float>(const int nthreads, const float* bottom_data_a, const float* bottom_data_b, const int blob_idx, float* top_data, int* mask);
+
+template<typename T>
+bool clMaxBackward(const int nthreads, const T* top_diff, const int blob_idx, const int* mask, T* bottom_diff) {
+  OpenCLDevice& device = OpenCLManager::CurrentPlatform().CurrentDevice();
+
+	std::string kernel_name = clGetKernelName<T>("MaxBackward");
+
+  cl_command_queue* queue = device.getQueue();
+	if ( ! queue ) {
+    LOG(ERROR) << device.name() << "> failed to get OpenCL command queue";
+		return false;
+	}
+
+  cl_kernel* kernel = device.getKernel(kernel_name);
+	if ( kernel == NULL ) {
+		return false;
+	}
+
+	CL_SET_KERNEL_ARG
+  CL_SET_TYPE_KERNEL_ARG(int, nthreads, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&top_diff, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, blob_idx, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&mask, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&bottom_diff, kernel)
+
+	size_t global = CAFFE_GET_GLOBAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+	size_t local  = CAFFE_GET_LOCAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+
+	err = clEnqueueNDRangeKernel(*queue, *kernel, 1, NULL, &global, &local, 0, NULL, NULL);
+	if ( err != CL_SUCCESS ) {
+    LOG(ERROR) << "Failed to enqueue kernel '"<<kernel_name.c_str()<<"' on GPU "<< device.name()<<" : "<<caffe::OpenCL::what(err);
+		return false;
+	}
+	//clFinish(*queue);
+  DLOG(INFO) << "kernel '"<<kernel_name.c_str()<<"' executed on GPU "<<device.name();
+
+	CL_SET_KERNEL_ARG_END
+
+	return true;
+};
+template bool clMaxBackward<float>(const int nthreads, const float* top_diff, const int blob_idx, const int* mask, float* bottom_diff);
+
+} // namespace OpenCL
+
+template<typename Dtype>
+void EltwiseLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+
+	int* mask = NULL;
+	const int count = (top)[0]->count();
+	Dtype* top_data = (top)[0]->mutable_gpu_data();
+	switch (op_) {
+	case EltwiseParameter_EltwiseOp_PROD:
+		caffe_gpu_mul(count, bottom[0]->gpu_data(), bottom[1]->gpu_data(), top_data);
+		for (int i = 2; i < bottom.size(); ++i) {
+			caffe_gpu_mul(count, top_data, bottom[i]->gpu_data(), top_data);
+		}
+		break;
+	case EltwiseParameter_EltwiseOp_SUM:
+		caffe_gpu_set(count, Dtype(0.), top_data);
+		// TODO(shelhamer) does cuBLAS optimize to sum for coeff = 1?
+		for (int i = 0; i < bottom.size(); ++i) {
+			caffe_gpu_axpy(count, coeffs_[i], bottom[i]->gpu_data(), top_data);
+		}
+		break;
+	case EltwiseParameter_EltwiseOp_MAX:
+		mask = max_idx_.mutable_gpu_data();
+		/*
+		// NOLINT_NEXT_LINE(whitespace/operators)
+		MaxForward<Dtype> <<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
+				count, bottom[0]->gpu_data(), bottom[1]->gpu_data(), 0, top_data, mask);
+		for (int i = 2; i < bottom.size(); ++i) {
+			// NOLINT_NEXT_LINE(whitespace/operators)
+		MaxForward<Dtype><<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
+				count, top_data, bottom[i]->gpu_data(), i-1, top_data, mask);
+		}
+		*/
+
+		BOOL_CHECK( caffe::OpenCL::clMaxForward<Dtype>(count, bottom[0]->gpu_data(), bottom[1]->gpu_data(), 0, top_data, mask) );
+		for (int i = 2; i < bottom.size(); ++i) {
+			BOOL_CHECK( caffe::OpenCL::clMaxForward<Dtype>(count, top_data, bottom[i]->gpu_data(), i-1, top_data, mask) );
+		}
+
+	break;
+	default:
+		LOG(FATAL)<< "Unknown elementwise operation.";
+	}
+}
+
+template<typename Dtype>
+void EltwiseLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+
+	const int* mask = NULL;
+	const int count = top[0]->count();
+	const Dtype* top_data = top[0]->gpu_data();
+	const Dtype* top_diff = top[0]->gpu_diff();
+	for (int i = 0; i < bottom.size(); ++i) {
+		if (propagate_down[i]) {
+			const Dtype* bottom_data = (bottom)[i]->gpu_data();
+			Dtype* bottom_diff = (bottom)[i]->mutable_gpu_diff();
+			switch (op_) {
+			case EltwiseParameter_EltwiseOp_PROD:
+				if (stable_prod_grad_) {
+					bool initialized = false;
+					for (int j = 0; j < bottom.size(); ++j) {
+						if (i == j) {
+							continue;
+						}
+						if (!initialized) {
+							caffe_copy(count, (bottom)[j]->gpu_data(), bottom_diff);
+							initialized = true;
+						} else {
+							caffe_gpu_mul(count, (bottom)[j]->gpu_data(), bottom_diff, bottom_diff);
+						}
+					}
+				} else {
+					caffe_gpu_div(count, top_data, bottom_data, bottom_diff);
+				}
+				caffe_gpu_mul(count, bottom_diff, top_diff, bottom_diff);
+				break;
+			case EltwiseParameter_EltwiseOp_SUM:
+				if (coeffs_[i] == Dtype(1.)) {
+					caffe_copy(count, top_diff, bottom_diff);
+				} else {
+					caffe_gpu_scale(count, coeffs_[i], top_diff, bottom_diff);
+				}
+				break;
+			case EltwiseParameter_EltwiseOp_MAX:
+				mask = max_idx_.gpu_data();
+				/*
+				MaxBackward<Dtype>  // NOLINT_NEXT_LINE(whitespace/operators)
+				<<<CAFFE_GET_BLOCKS(count), CAFFE_CUDA_NUM_THREADS>>>(
+						count, top_diff, i, mask, bottom_diff);
+						*/
+				BOOL_CHECK( caffe::OpenCL::clMaxBackward<Dtype>(count, top_diff, i, mask, bottom_diff));
+				break;
+			default:
+				LOG(FATAL)<< "Unknown elementwise operation.";
+			}
+		}
+	}
+}
+
+#endif
+
+#if defined(CPU_ONLY) && ! defined(USE_OPENCL)
 STUB_GPU(EltwiseLayer);
 #endif
 

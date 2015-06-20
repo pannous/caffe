@@ -16,13 +16,15 @@ caffe_leave_only_selected_tests(test_cuda ${BUILD_only_tests})
 #caffe_configure_testdatafile(test_data/sample_data_list.txt)
 
 set(the_target test.testbin)
-set(test_args --gtest_shuffle)
+
+#set(the_target test.testbin)
+#set(test_args --gtest_shuffle)
 
 if(HAVE_CUDA)
   caffe_cuda_compile(test_cuda_objs ${test_cuda})
   list(APPEND test_srcs ${test_cuda_objs} ${test_cuda})
 else()
-  list(APPEND test_args --gtest_filter="-*GPU*")
+  list(APPEND test_args --gtest_filter="-*GPU*:*Performance:*Validation")
 endif()
 
 # ---[ Adding test target
@@ -34,3 +36,13 @@ caffe_set_runtime_directory(${the_target} "${PROJECT_BINARY_DIR}/test")
 # ---[ Adding runtest
 add_custom_target(runtest COMMAND ${the_target} ${test_args}
                           WORKING_DIRECTORY ${PROJECT_SOURCE_DIR})
+
+if(CMAKE_BUILD_TYPE MATCHES Debug)
+    if(EXISTS "${PROJECT_BINARY_DIR}/test/test.testbin-d")
+        install(PROGRAMS ${PROJECT_BINARY_DIR}/test/test.testbin-d DESTINATION bin/)
+    endif()
+else()
+    if(EXISTS "${PROJECT_BINARY_DIR}/test/test.testbin")
+        install(PROGRAMS ${PROJECT_BINARY_DIR}/test/test.testbin DESTINATION bin/)
+    endif()
+endif()

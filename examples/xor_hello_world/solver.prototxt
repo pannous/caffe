@@ -26,4 +26,4 @@ max_iter: 30
 snapshot_prefix: "snapshot"
 momentum: 0.9
 weight_decay: 0.0005
-solver_mode: CPU # or GPU
+solver_mode: GPU # or GPU

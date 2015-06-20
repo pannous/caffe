@@ -18,6 +18,10 @@
 
 #include "caffe/util/device_alternate.hpp"
 
+#ifdef USE_OPENCL
+#include <caffe/util/OpenCL/OpenCLSupport.hpp>
+#endif
+
 // gflags 2.1 issue: namespace google was changed to gflags without warning.
 // Luckily we will be able to use GFLAGS_GFAGS_H_ to detect if it is version
 // 2.1. If yes, we will add a temporary solution to redirect the namespace.
@@ -33,30 +37,22 @@ private:\
   classname(const classname&);\
   classname& operator=(const classname&)
 
-// Instantiate a class with float and double specifications.
+// Instantiate a class with float and float specifications.
 #define INSTANTIATE_CLASS(classname) \
   char gInstantiationGuard##classname; \
-  template class classname<float>; \
-  template class classname<double>
+  template class classname<float>; 
 
 #define INSTANTIATE_LAYER_GPU_FORWARD(classname) \
   template void classname<float>::Forward_gpu( \
       const std::vector<Blob<float>*>& bottom, \
-      const std::vector<Blob<float>*>& top); \
-  template void classname<double>::Forward_gpu( \
-      const std::vector<Blob<double>*>& bottom, \
-      const std::vector<Blob<double>*>& top);
+      const std::vector<Blob<float>*>& top); 
 
 #define INSTANTIATE_LAYER_GPU_BACKWARD(classname) \
   template void classname<float>::Backward_gpu( \
       const std::vector<Blob<float>*>& top, \
       const std::vector<bool>& propagate_down, \
-      const std::vector<Blob<float>*>& bottom); \
-  template void classname<double>::Backward_gpu( \
-      const std::vector<Blob<double>*>& top, \
-      const std::vector<bool>& propagate_down, \
-      const std::vector<Blob<double>*>& bottom)
-
+      const std::vector<Blob<float>*>& bottom); 
+      
 #define INSTANTIATE_LAYER_GPU_FUNCS(classname) \
   INSTANTIATE_LAYER_GPU_FORWARD(classname); \
   INSTANTIATE_LAYER_GPU_BACKWARD(classname)
@@ -105,6 +101,11 @@ class Caffe {
     return *singleton_;
   }
   enum Brew { CPU, GPU };
+//  static bool GPU_USE_CUDA;
+//  static bool GPU_USE_OPENCL;
+
+  // Used for benchmarking.
+  static void DeviceSync();
 
   // This random number generator facade hides boost and CUDA rng
   // implementation from one another (for cross-platform compatibility).
@@ -127,7 +128,7 @@ class Caffe {
     }
     return *(Get().random_generator_);
   }
-#ifndef CPU_ONLY
+#ifdef USE_CUDA
   inline static cublasHandle_t cublas_handle() { return Get().cublas_handle_; }
   inline static curandGenerator_t curand_generator() {
     return Get().curand_generator_;
@@ -151,7 +152,7 @@ class Caffe {
   static void DeviceQuery();
 
  protected:
-#ifndef CPU_ONLY
+#ifdef USE_CUDA
   cublasHandle_t cublas_handle_;
   curandGenerator_t curand_generator_;
 #endif

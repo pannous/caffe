@@ -244,13 +244,13 @@ void hdf5_load_nd_dataset_helper(
   CHECK_GE(ndims, min_dim);
   CHECK_LE(ndims, max_dim);
 
-  // Verify that the data format is what we expect: float or double.
+  // Verify that the data format is what we expect: float or float.
   std::vector<hsize_t> dims(ndims);
   H5T_class_t class_;
   status = H5LTget_dataset_info(
       file_id, dataset_name_, dims.data(), &class_, NULL);
   CHECK_GE(status, 0) << "Failed to get dataset info for " << dataset_name_;
-  CHECK_EQ(class_, H5T_FLOAT) << "Expected float or double data";
+  CHECK_EQ(class_, H5T_FLOAT) << "Expected float or float data";
 
   vector<int> blob_dims(dims.size());
   for (int i = 0; i < dims.size(); ++i) {
@@ -269,15 +269,6 @@ void hdf5_load_nd_dataset<float>(hid_t file_id, const char* dataset_name_,
 }
 
 template <>
-void hdf5_load_nd_dataset<double>(hid_t file_id, const char* dataset_name_,
-        int min_dim, int max_dim, Blob<double>* blob) {
-  hdf5_load_nd_dataset_helper(file_id, dataset_name_, min_dim, max_dim, blob);
-  herr_t status = H5LTread_dataset_double(
-    file_id, dataset_name_, blob->mutable_cpu_data());
-  CHECK_GE(status, 0) << "Failed to read double dataset " << dataset_name_;
-}
-
-template <>
 void hdf5_save_nd_dataset<float>(
     const hid_t file_id, const string& dataset_name, const Blob<float>& blob) {
   hsize_t dims[HDF5_NUM_DIMS];
@@ -290,17 +281,5 @@ void hdf5_save_nd_dataset<float>(
   CHECK_GE(status, 0) << "Failed to make float dataset " << dataset_name;
 }
 
-template <>
-void hdf5_save_nd_dataset<double>(
-    const hid_t file_id, const string& dataset_name, const Blob<double>& blob) {
-  hsize_t dims[HDF5_NUM_DIMS];
-  dims[0] = blob.num();
-  dims[1] = blob.channels();
-  dims[2] = blob.height();
-  dims[3] = blob.width();
-  herr_t status = H5LTmake_dataset_double(
-      file_id, dataset_name.c_str(), HDF5_NUM_DIMS, dims, blob.cpu_data());
-  CHECK_GE(status, 0) << "Failed to make double dataset " << dataset_name;
-}
 
 }  // namespace caffe

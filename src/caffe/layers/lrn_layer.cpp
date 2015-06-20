@@ -247,7 +247,241 @@ void LRNLayer<Dtype>::WithinChannelBackward(
   }
 }
 
-#ifdef CPU_ONLY
+#if defined(USE_OPENCL)
+
+namespace OpenCL {
+
+template<typename T>
+bool clLRNFillScale(const int nthreads, const T* in,
+                    const int num, const int channels, const int height,
+                    const int width, const int size2,
+                    const T alpha_over_size, const T k, T* scale) {
+  OpenCLDevice& current_device =
+      OpenCLManager::CurrentPlatform().CurrentDevice();
+	std::string kernel_name = clGetKernelName<T>("LRNFillScale");
+  cl_command_queue* queue = current_device.getQueue();
+  if (!queue) {
+    LOG(ERROR) << current_device.name()
+               << "> failed to get OpenCL command queue";
+		return false;
+	}
+
+  cl_kernel* kernel = current_device.getKernel(kernel_name);
+  if (kernel == NULL) {
+		return false;
+	}
+
+	CL_SET_KERNEL_ARG
+  CL_SET_TYPE_KERNEL_ARG(int, nthreads, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&in, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, num, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, channels, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, height, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, width, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, size2, kernel)
+  CL_SET_TYPE_KERNEL_ARG(T, alpha_over_size, kernel)
+  CL_SET_TYPE_KERNEL_ARG(T, k, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&scale, kernel)
+
+	size_t global = CAFFE_GET_GLOBAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+	size_t local  = CAFFE_GET_LOCAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+
+  err = clEnqueueNDRangeKernel(*queue, *kernel, 1, NULL, &global,
+                               &local, 0, NULL, NULL);
+	if ( err != CL_SUCCESS ) {
+    LOG(ERROR) << "Failed to enqueue kernel '"
+               << kernel_name.c_str()<<"' on GPU " << current_device.name()
+               << " : "<<caffe::OpenCL::what(err);
+		return false;
+	}
+	//clFinish(*queue);
+  DLOG(INFO) << "kernel '" << kernel_name << "' executed on GPU "
+             << current_device.name();
+
+	CL_SET_KERNEL_ARG_END
+
+	return true;
+}
+template bool clLRNFillScale<float>(const int nthreads, const float* in, const int num, const int channels, const int height, const int width, const int size, const float alpha_over_size, const float k, float* scale);
+
+template<typename T>
+bool clLRNComputeOutput(const int nthreads, const T* in, const T* scale, const T negative_beta, T* out) {
+  OpenCLDevice& current_device = OpenCLManager::CurrentPlatform().CurrentDevice();
+	std::string kernel_name = clGetKernelName<T>("LRNComputeOutput");
+  cl_command_queue* queue = current_device.getQueue();
+  if (!queue) {
+    LOG(ERROR) << current_device.name() << "> failed to get OpenCL command queue";
+		return false;
+	}
+
+  cl_kernel* kernel = current_device.getKernel(kernel_name);
+  if (kernel == NULL) {
+		return false;
+	}
+
+	CL_SET_KERNEL_ARG
+  CL_SET_TYPE_KERNEL_ARG(int, nthreads, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&in, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&scale, kernel)
+  CL_SET_TYPE_KERNEL_ARG(T, negative_beta, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&out, kernel)
+
+	size_t global = CAFFE_GET_GLOBAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+	size_t local  = CAFFE_GET_LOCAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+
+  err = clEnqueueNDRangeKernel(*queue, *kernel, 1, NULL, &global,
+                               &local, 0, NULL, NULL);
+	if ( err != CL_SUCCESS ) {
+    LOG(ERROR) << "Failed to enqueue kernel '"
+               << kernel_name << "' on GPU "
+               << current_device.name() << " : " << caffe::OpenCL::what(err);
+		return false;
+	}
+	//clFinish(*queue);
+  DLOG(INFO) << "kernel '" << kernel_name
+             <<"' executed on GPU " << current_device.name();
+
+	CL_SET_KERNEL_ARG_END
+
+	return true;
+}
+template bool clLRNComputeOutput<float>(const int nthreads, const float* in, const float* scale, const float negative_beta, float* out);
+
+template<typename T>
+bool clLRNComputeDiff(const int nthreads, const T* bottom_data, const T* top_data, const T* scale, const T* top_diff, const int num, const int channels, const int height, const int width, const int size2, const T negative_beta, const T cache_ratio, T* bottom_diff) {
+  OpenCLDevice& current_device = OpenCLManager::CurrentPlatform().CurrentDevice();
+	std::string kernel_name = clGetKernelName<T>("LRNComputeDiff");
+  cl_command_queue* queue = current_device.getQueue();
+  if (!queue) {
+    LOG(ERROR) << current_device.name() << "> failed to get OpenCL command queue";
+		return false;
+	}
+
+  cl_kernel* kernel = current_device.getKernel(kernel_name);
+	if ( kernel == NULL ) {
+		return false;
+	}
+
+	CL_SET_KERNEL_ARG
+  CL_SET_TYPE_KERNEL_ARG(int, nthreads, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&bottom_data, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&top_data, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&scale, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&top_diff, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, num, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, channels, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, height, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, width, kernel)
+  CL_SET_TYPE_KERNEL_ARG(int, size2, kernel)
+  CL_SET_TYPE_KERNEL_ARG(T, negative_beta, kernel)
+  CL_SET_TYPE_KERNEL_ARG(T, cache_ratio, kernel)
+  CL_SET_ARRAY_KERNEL_ARG(&bottom_diff, kernel)
+
+	size_t global = CAFFE_GET_GLOBAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+	size_t local  = CAFFE_GET_LOCAL_WORKITEMS(nthreads, OPENCL_LOCAL_SIZE);
+
+  err = clEnqueueNDRangeKernel(*queue, *kernel, 1, NULL, &global,
+                               &local, 0, NULL, NULL);
+	if ( err != CL_SUCCESS ) {
+    LOG(ERROR) << "Failed to enqueue kernel '"
+               << kernel_name << "' on GPU "
+               << current_device.name()<<" : "<< caffe::OpenCL::what(err);
+		return false;
+	}
+	//clFinish(*queue);
+  DLOG(INFO) << "kernel '" << kernel_name.c_str()
+             << "' executed on GPU " << current_device.name();
+
+	CL_SET_KERNEL_ARG_END
+
+	return true;
+}
+template bool clLRNComputeDiff<float>(const int nthreads, const float* bottom_data, const float* top_data, const float* scale, const float* top_diff, const int num, const int channels, const int height, const int width, const int size, const float negative_beta, const float cache_ratio, float* bottom_diff);
+
+} // namespace OpenCL
+
+template<typename Dtype>
+void LRNLayer<Dtype>::Forward_gpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+
+	switch (this->layer_param_.lrn_param().norm_region()) {
+	  case LRNParameter_NormRegion_ACROSS_CHANNELS:
+	    CrossChannelForward_gpu(bottom, top);
+	    break;
+	  case LRNParameter_NormRegion_WITHIN_CHANNEL:
+	    WithinChannelForward(bottom, top);
+	    break;
+	  default:
+	    LOG(FATAL) << "Unknown normalization region.";
+	}
+}
+
+template<typename Dtype>
+void LRNLayer<Dtype>::CrossChannelForward_gpu(const vector<Blob<Dtype>*>& bottom, const vector<Blob<Dtype>*>& top) {
+
+	const Dtype* bottom_data = bottom[0]->gpu_data();
+  Dtype* top_data = top[0]->mutable_gpu_data();
+  Dtype* scale_data = scale_.mutable_gpu_data();
+  // We will launch one kernel for each pixel location, and have the kernel
+  // go through all the channels.
+  int n_threads = num_ * height_ * width_;
+
+  /*
+  // NOLINT_NEXT_LINE(whitespace/operators)
+  LRNFillScale<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
+      n_threads, bottom_data, num_, channels_, height_, width_, size_,
+      alpha_ / size_, k_, scale_data);
+  CUDA_POST_KERNEL_CHECK;
+  n_threads = bottom[0]->count();
+  // NOLINT_NEXT_LINE(whitespace/operators)
+  LRNComputeOutput<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
+      n_threads, bottom_data, scale_data, -beta_, top_data);
+  CUDA_POST_KERNEL_CHECK;
+	*/
+
+	BOOL_CHECK( caffe::OpenCL::clLRNFillScale(n_threads, bottom_data, num_, channels_, height_, width_, size_, alpha_ / size_, k_, scale_data) );
+	n_threads = bottom[0]->count();
+	BOOL_CHECK( caffe::OpenCL::clLRNComputeOutput(n_threads, bottom_data, scale_data, -beta_, top_data) );
+}
+
+template<typename Dtype>
+void LRNLayer<Dtype>::Backward_gpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+  switch (this->layer_param_.lrn_param().norm_region()) {
+  case LRNParameter_NormRegion_ACROSS_CHANNELS:
+    CrossChannelBackward_gpu(top, propagate_down, bottom);
+    break;
+  case LRNParameter_NormRegion_WITHIN_CHANNEL:
+    WithinChannelBackward(top, propagate_down, bottom);
+    break;
+  default:
+    LOG(FATAL) << "Unknown normalization region.";
+  }
+}
+
+template<typename Dtype>
+void LRNLayer<Dtype>::CrossChannelBackward_gpu(const vector<Blob<Dtype>*>& top, const vector<bool>& propagate_down, const vector<Blob<Dtype>*>& bottom) {
+
+  int n_threads = num_ * height_ * width_;
+  /*
+  // NOLINT_NEXT_LINE(whitespace/operators)
+  LRNComputeDiff<<<CAFFE_GET_BLOCKS(n_threads), CAFFE_CUDA_NUM_THREADS>>>(
+      n_threads, bottom[0]->gpu_data(), top[0]->gpu_data(),
+      scale_.gpu_data(), top[0]->gpu_diff(), num_, channels_, height_, width_,
+      size_, -beta_, Dtype(2. * alpha_ * beta_ / size_),
+      bottom[0]->mutable_gpu_diff());
+	*/
+	BOOL_CHECK(
+			caffe::OpenCL::clLRNComputeDiff(
+					n_threads, bottom[0]->gpu_data(), top[0]->gpu_data(),
+		      scale_.gpu_data(), top[0]->gpu_diff(), num_, channels_, height_, width_,
+		      size_, -beta_, Dtype(2. * alpha_ * beta_ / size_),
+		      bottom[0]->mutable_gpu_diff()
+			)
+	);
+}
+
+#endif // USE_OPENCL
+
+#if defined(CPU_ONLY) && ! defined(USE_OPENCL)
 STUB_GPU(LRNLayer);
 STUB_GPU_FORWARD(LRNLayer, CrossChannelForward);
 STUB_GPU_BACKWARD(LRNLayer, CrossChannelBackward);

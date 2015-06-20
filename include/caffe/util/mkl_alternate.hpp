@@ -27,8 +27,8 @@ extern "C" {
     v##name<float>(n, a, y); \
   } \
   inline void vd##name( \
-      const int n, const double* a, double* y) { \
-    v##name<double>(n, a, y); \
+      const int n, const float* a, float* y) { \
+    v##name<float>(n, a, y); \
   }
 
 DEFINE_VSL_UNARY_FUNC(Sqr, y[i] = a[i] * a[i]);
@@ -48,8 +48,8 @@ DEFINE_VSL_UNARY_FUNC(Abs, y[i] = fabs(a[i]));
     v##name<float>(n, a, b, y); \
   } \
   inline void vd##name( \
-      const int n, const double* a, const float b, double* y) { \
-    v##name<double>(n, a, b, y); \
+      const int n, const float* a, const float b, float* y) { \
+    v##name<float>(n, a, b, y); \
   }
 
 DEFINE_VSL_UNARY_FUNC_WITH_PARAM(Powx, y[i] = pow(a[i], b));
@@ -67,8 +67,8 @@ DEFINE_VSL_UNARY_FUNC_WITH_PARAM(Powx, y[i] = pow(a[i], b));
     v##name<float>(n, a, b, y); \
   } \
   inline void vd##name( \
-      const int n, const double* a, const double* b, double* y) { \
-    v##name<double>(n, a, b, y); \
+      const int n, const float* a, const float* b, float* y) { \
+    v##name<float>(n, a, b, y); \
   }
 
 DEFINE_VSL_BINARY_FUNC(Add, y[i] = a[i] + b[i]);
@@ -84,12 +84,6 @@ inline void cblas_saxpby(const int N, const float alpha, const float* X,
                          const int incY) {
   cblas_sscal(N, beta, Y, incY);
   cblas_saxpy(N, alpha, X, incX, Y, incY);
-}
-inline void cblas_daxpby(const int N, const double alpha, const double* X,
-                         const int incX, const double beta, double* Y,
-                         const int incY) {
-  cblas_dscal(N, beta, Y, incY);
-  cblas_daxpy(N, alpha, X, incX, Y, incY);
 }
 
 #endif  // USE_MKL

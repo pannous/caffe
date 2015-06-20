@@ -14,7 +14,7 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/upgrade_proto.hpp"
 
-#include "caffe/test/test_caffe_main.hpp"
+//#include "caffe/test/test_caffe_main.hpp"
 
 namespace caffe {
 
@@ -756,7 +756,7 @@ void Net<Dtype>::Update() {
       owner_diff = params_[param_owners_[i]]->mutable_cpu_diff();
       caffe_add(count, this_diff, owner_diff, owner_diff);
       break;
-#ifndef CPU_ONLY
+#if defined(USE_CUDA) || defined(USE_OPENCL)
     case Caffe::GPU:
       this_diff = params_[i]->gpu_diff();
       owner_diff = params_[param_owners_[i]]->mutable_gpu_diff();

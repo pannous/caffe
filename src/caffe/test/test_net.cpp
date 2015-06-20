@@ -1264,10 +1264,10 @@ class FilterNetTest : public ::testing::Test {
     EXPECT_EQ(expected_filtered_param.DebugString(),
         actual_filtered_param.DebugString());
     // Also test idempotence.
-    NetParameter double_filtered_param;
-    Net<float>::FilterNet(actual_filtered_param, &double_filtered_param);
+    NetParameter float_filtered_param;
+    Net<float>::FilterNet(actual_filtered_param, &float_filtered_param);
     EXPECT_EQ(actual_filtered_param.DebugString(),
-       double_filtered_param.DebugString());
+       float_filtered_param.DebugString());
   }
 };
 

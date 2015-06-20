@@ -11,6 +11,7 @@
 
 #include "caffe/test/test_caffe_main.hpp"
 #include "caffe/test/test_gradient_check_util.hpp"
+#include "caffe/util/benchmark.hpp"
 
 using std::min;
 using std::max;
@@ -45,6 +46,47 @@ class LRNLayerTest : public MultiDeviceTest<TypeParam> {
   Blob<Dtype>* const blob_top_;
   vector<Blob<Dtype>*> blob_bottom_vec_;
   vector<Blob<Dtype>*> blob_top_vec_;
+
+  void LRNLayerTestSetup(int num_images, int num_channels, int im_width, int im_height) {
+
+	  blob_bottom_->Reshape(num_images, num_channels, im_height, im_width);
+
+	  FillerParameter filler_param;
+	  UniformFiller<Dtype> filler(filler_param);
+	  filler.Fill(this->blob_bottom_);
+
+	  blob_bottom_vec_.clear();
+	  blob_bottom_vec_.push_back(blob_bottom_);
+  }
+
+  void LRNLayerTestForwardPerformance(int num_images, int num_channels, int im_width, int im_height) {
+
+	  this->LRNLayerTestSetup(num_images, num_channels, im_width, im_height);
+
+	  typedef typename TypeParam::Dtype Dtype;
+	  LayerParameter layer_param;
+	  LRNLayer<Dtype> layer(layer_param);
+	  layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
+
+#if defined(USE_CUDA) || defined(USE_OPENCL)
+			blob_bottom_->mutable_gpu_data();
+			blob_bottom_->mutable_gpu_diff();
+			blob_top_->mutable_gpu_data();
+			blob_top_->mutable_gpu_diff();
+#endif
+
+	  record r;
+	  r.type 					= std::string(typeid(Dtype).name());
+	  r.num_images 		= num_images;
+	  r.num_channels 	= num_channels;
+	  r.img_width			= im_width;
+	  r.img_height		= im_height;
+
+	  BENCH(r, {
+			  layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
+	  });
+  }
+
 };
 
 template <typename TypeParam>
@@ -132,6 +174,24 @@ TYPED_TEST(LRNLayerTest, TestForwardAcrossChannels) {
   Blob<Dtype> top_reference;
   this->ReferenceLRNForward(*(this->blob_bottom_), layer_param,
       &top_reference);
+
+  for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+    EXPECT_NEAR(this->blob_top_->cpu_data()[i], top_reference.cpu_data()[i],
+                this->epsilon_);
+  }
+}
+
+TYPED_TEST(LRNLayerTest, TestForwardAcrossChannelsLargeRegion) {
+  typedef typename TypeParam::Dtype Dtype;
+  LayerParameter layer_param;
+  layer_param.mutable_lrn_param()->set_local_size(15);
+  LRNLayer<Dtype> layer(layer_param);
+  layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
+  layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
+  Blob<Dtype> top_reference;
+  this->ReferenceLRNForward(*(this->blob_bottom_), layer_param,
+      &top_reference);
+
   for (int i = 0; i < this->blob_bottom_->count(); ++i) {
     EXPECT_NEAR(this->blob_top_->cpu_data()[i], top_reference.cpu_data()[i],
                 this->epsilon_);
@@ -141,6 +201,28 @@ TYPED_TEST(LRNLayerTest, TestForwardAcrossChannels) {
 TYPED_TEST(LRNLayerTest, TestGradientAcrossChannels) {
   typedef typename TypeParam::Dtype Dtype;
   LayerParameter layer_param;
+  LRNLayer<Dtype> layer(layer_param);
+  GradientChecker<Dtype> checker(1e-2, 1e-2);
+  layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
+  layer.Forward(this->blob_bottom_vec_, this->blob_top_vec_);
+  for (int i = 0; i < this->blob_top_->count(); ++i) {
+    this->blob_top_->mutable_cpu_diff()[i] = 1.;
+  }
+  vector<bool> propagate_down(this->blob_bottom_vec_.size(), true);
+  layer.Backward(this->blob_top_vec_, propagate_down,
+                 this->blob_bottom_vec_);
+  // for (int i = 0; i < this->blob_bottom_->count(); ++i) {
+  //   std::cout << "CPU diff " << this->blob_bottom_->cpu_diff()[i]
+  //       << std::endl;
+  // }
+  checker.CheckGradientExhaustive(&layer, this->blob_bottom_vec_,
+      this->blob_top_vec_);
+}
+
+TYPED_TEST(LRNLayerTest, TestGradientAcrossChannelsLargeRegion) {
+  typedef typename TypeParam::Dtype Dtype;
+  LayerParameter layer_param;
+  layer_param.mutable_lrn_param()->set_local_size(15);
   LRNLayer<Dtype> layer(layer_param);
   GradientChecker<Dtype> checker(1e-2, 1e-2);
   layer.SetUp(this->blob_bottom_vec_, this->blob_top_vec_);
@@ -208,5 +290,11 @@ TYPED_TEST(LRNLayerTest, TestGradientWithinChannel) {
       this->blob_top_vec_);
 }
 
+TYPED_TEST(LRNLayerTest, TestForwardPerformance) {
+
+	for(int i=TEST_IMAGE_WIDTH_MIN; i<=TEST_IMAGE_WIDTH_MAX; i*=2 ) {
+		this->LRNLayerTestForwardPerformance(TEST_NUM_IMAGES, TEST_NUM_CHANNELS, i, i);
+	}
+}
 
 }  // namespace caffe
