@@ -373,7 +373,7 @@ void OpenCLDevice::SetContext(cl::Context context) {
 }
 
 cl_kernel* OpenCLDevice::getKernel(std::string name) {
-
+   name=name.replace("FloatFloat","Float"); //WTF
   if (kernel_map_.find(name) == kernel_map_.end()) {
     LOG(FATAL) << "kernel '" << name << "' not found in map";
 		return NULL;
