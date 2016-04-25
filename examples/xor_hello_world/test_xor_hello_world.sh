@@ -4,6 +4,7 @@
 [ -d examples/xor_hello_world ] && cd examples/xor_hello_world 
 
 [ -f xor_data.hdf5 ] && echo "Found xor_data.hdf5 file" || ./create_hdf5_data.py
+
 h5dump xor_data.hdf5
 
 # The only data file we use for training here:
